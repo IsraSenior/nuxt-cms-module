@@ -6,7 +6,8 @@ import {
   addServerHandler,
   addRouteMiddleware,
   extendPages,
-  addServerPlugin
+  addServerPlugin,
+  installModule
 } from '@nuxt/kit'
 import type { NuxtModule } from '@nuxt/schema'
 import { defu } from 'defu'
@@ -53,6 +54,9 @@ const cmsModule: NuxtModule<CmsModuleOptions> = defineNuxtModule({
 
   async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
+
+    // Install Nuxt UI module (required for admin panel components)
+    await installModule('@nuxt/ui')
 
     // Merge options with defaults
     const moduleOptions = defu(options, {
