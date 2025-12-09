@@ -83,6 +83,7 @@ function toggleLock() {
     <div class="flex gap-2">
       <UInput
         v-model="value"
+        variant="outline"
         :disabled="disabled || isLocked"
         :placeholder="`auto-generated-${separator}slug`"
         class="flex-1 font-mono text-sm"

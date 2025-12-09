@@ -40,6 +40,7 @@ const rows = computed(() => props.field.rows || 4)
   >
     <UTextarea
       v-model="value"
+      variant="outline"
       :placeholder="placeholder"
       :disabled="disabled"
       :rows="rows"

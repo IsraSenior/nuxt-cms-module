@@ -57,6 +57,7 @@ const presets = computed(() => props.field.presets || [
         </div>
         <UInput
           v-model="value"
+          variant="outline"
           :disabled="disabled"
           placeholder="#000000"
           class="flex-1 font-mono"

@@ -40,6 +40,7 @@ const required = computed(() => props.field.required || false)
     <UInput
       v-model="value"
       type="url"
+      variant="outline"
       :placeholder="placeholder"
       :disabled="disabled"
       class="w-full"

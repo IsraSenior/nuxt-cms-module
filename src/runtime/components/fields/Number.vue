@@ -40,6 +40,7 @@ const required = computed(() => props.field.required || false)
     <UInput
       v-model.number="value"
       type="number"
+      variant="outline"
       :placeholder="placeholder"
       :disabled="disabled"
       :min="field.min"

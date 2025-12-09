@@ -39,6 +39,7 @@ const required = computed(() => props.field.required || false)
     <UInput
       v-model="value"
       type="datetime-local"
+      variant="outline"
       :disabled="disabled"
       :min="field.min"
       :max="field.max"

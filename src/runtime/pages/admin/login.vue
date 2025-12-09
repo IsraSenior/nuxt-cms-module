@@ -96,11 +96,11 @@ onMounted(async () => {
             <UInput
               v-model="form.username"
               type="text"
+              variant="outline"
               placeholder="Enter your username"
               icon="i-heroicons-user"
               size="lg"
               autofocus
-              :ui="{ base: 'login__input' }"
             />
           </UFormField>
 
@@ -108,10 +108,10 @@ onMounted(async () => {
             <UInput
               v-model="form.password"
               type="password"
+              variant="outline"
               placeholder="Enter your password"
               icon="i-heroicons-lock-closed"
               size="lg"
-              :ui="{ base: 'login__input' }"
             />
           </UFormField>
 

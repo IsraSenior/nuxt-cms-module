@@ -77,6 +77,7 @@ function parseMarkdown(md: string): string {
         <!-- Editor -->
         <UTextarea
           v-model="value"
+          variant="outline"
           :placeholder="placeholder"
           :disabled="disabled"
           :rows="rows"

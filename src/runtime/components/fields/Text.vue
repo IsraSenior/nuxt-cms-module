@@ -39,6 +39,7 @@ const required = computed(() => props.field.required || false)
   >
     <UInput
       v-model="value"
+      variant="outline"
       :placeholder="placeholder"
       :disabled="disabled"
       :minlength="field.minLength"
