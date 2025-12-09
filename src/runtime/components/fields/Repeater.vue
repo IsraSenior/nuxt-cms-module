@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { RepeaterFieldDefinition, FieldDefinition } from '../../types'
 
 interface Props {
