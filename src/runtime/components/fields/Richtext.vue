@@ -139,17 +139,17 @@ function isActive(action: string): boolean {
     :help="help"
     :error="error"
   >
-    <div class="border border-gray-300 rounded-lg overflow-hidden">
+    <div class="richtext-editor">
       <!-- Toolbar -->
-      <div class="flex flex-wrap gap-1 p-2 bg-gray-50 border-b border-gray-200">
+      <div class="richtext-editor__toolbar">
         <button
           v-for="btn in toolbarButtons"
           :key="btn.action"
           type="button"
           :title="btn.title"
           :class="[
-            'px-2 py-1 text-sm rounded hover:bg-gray-200 transition-colors',
-            isActive(btn.action) ? 'bg-gray-200 text-blue-600' : 'text-gray-700'
+            'richtext-editor__btn',
+            isActive(btn.action) ? 'richtext-editor__btn--active' : ''
           ]"
           :disabled="disabled"
           @click="executeAction(btn.action)"
@@ -161,8 +161,8 @@ function isActive(action: string): boolean {
       <!-- Editor -->
       <EditorContent
         :editor="editor"
+        class="richtext-editor__content"
         :class="[
-          'prose prose-sm max-w-none p-4',
           { 'min-h-[200px]': !field.minHeight },
           { 'opacity-50': disabled }
         ]"
@@ -177,14 +177,121 @@ function isActive(action: string): boolean {
 </template>
 
 <style>
-.ProseMirror {
-  outline: none;
+/* Richtext Editor */
+.richtext-editor {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: white;
 }
+
+:root.dark .richtext-editor {
+  border-color: #374151;
+  background-color: #111827;
+}
+
+.richtext-editor__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 8px;
+  background-color: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+:root.dark .richtext-editor__toolbar {
+  background-color: #1f2937;
+  border-bottom-color: #374151;
+}
+
+.richtext-editor__btn {
+  padding: 4px 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  color: #374151;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.richtext-editor__btn:hover {
+  background-color: #e5e7eb;
+}
+
+.richtext-editor__btn--active {
+  background-color: #dbeafe;
+  color: #2563eb;
+}
+
+:root.dark .richtext-editor__btn {
+  color: #d1d5db;
+}
+
+:root.dark .richtext-editor__btn:hover {
+  background-color: #374151;
+}
+
+:root.dark .richtext-editor__btn--active {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+.richtext-editor__content {
+  padding: 16px;
+}
+
+.richtext-editor__content .ProseMirror {
+  outline: none;
+  min-height: 100px;
+  color: #111827;
+}
+
+:root.dark .richtext-editor__content .ProseMirror {
+  color: #f3f4f6;
+}
+
 .ProseMirror p.is-editor-empty:first-child::before {
-  color: #adb5bd;
+  color: #9ca3af;
   content: attr(data-placeholder);
   float: left;
   height: 0;
   pointer-events: none;
+}
+
+:root.dark .ProseMirror p.is-editor-empty:first-child::before {
+  color: #6b7280;
+}
+
+/* Prose styles */
+.richtext-editor__content .ProseMirror h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.richtext-editor__content .ProseMirror h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.richtext-editor__content .ProseMirror p {
+  margin-bottom: 12px;
+}
+
+.richtext-editor__content .ProseMirror ul,
+.richtext-editor__content .ProseMirror ol {
+  margin-bottom: 12px;
+  padding-left: 24px;
+}
+
+.richtext-editor__content .ProseMirror blockquote {
+  border-left: 3px solid #d1d5db;
+  padding-left: 16px;
+  margin: 16px 0;
+  color: #6b7280;
+}
+
+:root.dark .richtext-editor__content .ProseMirror blockquote {
+  border-left-color: #4b5563;
+  color: #9ca3af;
 }
 </style>

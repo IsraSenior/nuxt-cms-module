@@ -66,7 +66,7 @@ function parseMarkdown(md: string): string {
       <div class="flex justify-end">
         <button
           type="button"
-          class="text-sm text-gray-500 hover:text-gray-700"
+          class="markdown-toggle"
           @click="showPreview = !showPreview"
         >
           {{ showPreview ? 'Hide Preview' : 'Show Preview' }}
@@ -87,7 +87,7 @@ function parseMarkdown(md: string): string {
         <!-- Preview -->
         <div
           v-if="showPreview"
-          class="prose prose-sm max-w-none p-4 border border-gray-200 rounded-lg bg-gray-50 overflow-auto"
+          class="markdown-preview"
           :style="{ maxHeight: `${rows * 24}px` }"
           v-html="parseMarkdown(value)"
         />
@@ -95,3 +95,71 @@ function parseMarkdown(md: string): string {
     </div>
   </UFormField>
 </template>
+
+<style>
+.markdown-toggle {
+  font-size: 14px;
+  color: #6b7280;
+  transition: color 0.15s ease;
+}
+
+.markdown-toggle:hover {
+  color: #374151;
+}
+
+:root.dark .markdown-toggle {
+  color: #9ca3af;
+}
+
+:root.dark .markdown-toggle:hover {
+  color: #d1d5db;
+}
+
+.markdown-preview {
+  max-width: none;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  overflow: auto;
+  color: #111827;
+}
+
+:root.dark .markdown-preview {
+  border-color: #374151;
+  background-color: #1f2937;
+  color: #f3f4f6;
+}
+
+.markdown-preview h1,
+.markdown-preview h2,
+.markdown-preview h3 {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.markdown-preview h1 { font-size: 24px; }
+.markdown-preview h2 { font-size: 20px; }
+.markdown-preview h3 { font-size: 16px; }
+
+.markdown-preview code {
+  background-color: #e5e7eb;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+:root.dark .markdown-preview code {
+  background-color: #374151;
+}
+
+.markdown-preview a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+:root.dark .markdown-preview a {
+  color: #60a5fa;
+}
+</style>

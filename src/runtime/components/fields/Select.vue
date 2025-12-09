@@ -50,6 +50,7 @@ const options = computed(() => props.field.options.map(opt => ({
       :disabled="disabled"
       :multiple="field.multiple"
       :searchable="field.searchable"
+      variant="outline"
       class="w-full"
     />
   </UFormField>
