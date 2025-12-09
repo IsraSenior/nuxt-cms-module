@@ -1,7 +1,8 @@
+import { defineNitroPlugin, useRuntimeConfig } from '#imports'
 import { initCmsDatabase } from '../database/client'
 import { createInitialAdmin } from '../utils/auth'
 
-export default defineNitroPlugin(async (nitroApp) => {
+export default defineNitroPlugin(async () => {
   const config = useRuntimeConfig()
 
   try {
