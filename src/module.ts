@@ -1,7 +1,6 @@
 import {
   defineNuxtModule,
   createResolver,
-  addPlugin,
   addImports,
   addComponentsDir,
   addServerHandler,
@@ -9,6 +8,7 @@ import {
   extendPages,
   addServerPlugin
 } from '@nuxt/kit'
+import type { NuxtModule } from '@nuxt/schema'
 import { defu } from 'defu'
 import type { CmsModuleOptions, CmsConfig } from './runtime/types'
 
@@ -17,7 +17,7 @@ export { defineCmsConfig } from './runtime/types'
 
 const MODULE_NAME = '@neskeep/nuxt-cms'
 
-export default defineNuxtModule<CmsModuleOptions>({
+const cmsModule: NuxtModule<CmsModuleOptions> = defineNuxtModule({
   meta: {
     name: MODULE_NAME,
     configKey: 'cms',
@@ -352,33 +352,5 @@ export default defineNuxtModule<CmsModuleOptions>({
   }
 })
 
-declare module '@nuxt/schema' {
-  interface RuntimeConfig {
-    cms: {
-      database: {
-        provider: 'sqlite' | 'postgresql'
-        url?: string
-        filename?: string
-      }
-      admin: {
-        credentials?: {
-          username: string
-          password: string
-        }
-      }
-      uploads: {
-        path: string
-        maxSize: number
-        allowedTypes: string[]
-      }
-      jwtSecret: string
-    }
-  }
+export default cmsModule
 
-  interface PublicRuntimeConfig {
-    cms: {
-      adminPath: string
-      adminEnabled: boolean
-    }
-  }
-}

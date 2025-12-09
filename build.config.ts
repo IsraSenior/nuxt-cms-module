@@ -1,21 +1,12 @@
-import { defineBuildConfig } from 'unbuild'
-
-export default defineBuildConfig({
-  entries: [
-    { input: 'src/module', name: 'module' }
-  ],
+export default {
   externals: [
     'nuxt',
     'vue',
     '@nuxt/kit',
+    '@nuxt/schema',
     '@nuxt/ui',
     'drizzle-orm',
     'better-sqlite3',
     'postgres'
-  ],
-  declaration: true,
-  rollup: {
-    emitCJS: true,
-    inlineDependencies: true
-  }
-})
+  ]
+}
