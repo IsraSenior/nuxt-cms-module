@@ -15,27 +15,33 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 function findProjectRoot() {
   let dir = process.cwd()
 
-  // If we're in node_modules, go up to find the project root
-  if (dir.includes('node_modules')) {
-    dir = dir.split('node_modules')[0]
-  }
+  // Get the module's directory
+  const moduleDir = dirname(fileURLToPath(import.meta.url))
 
-  // Also check common paths
+  // If we're in node_modules, go up to find the project root
+  // Structure: project/node_modules/@neskeep/nuxt-cms/scripts/postinstall.mjs
   const possiblePaths = [
-    dir,
-    join(dir, '..', '..', '..'), // node_modules/@neskeep/nuxt-cms -> project
+    // From module directory: go up 4 levels
+    join(moduleDir, '..', '..', '..', '..'),
+    // From cwd if it contains node_modules
+    dir.includes('node_modules') ? dir.split('node_modules')[0] : null,
+    // Standard paths
+    join(dir, '..', '..', '..'),
     join(dir, '..', '..'),
-  ]
+    dir
+  ].filter(Boolean)
 
   for (const path of possiblePaths) {
-    if (existsSync(join(path, 'nuxt.config.ts')) || existsSync(join(path, 'nuxt.config.js'))) {
-      return path
+    const normalizedPath = path.replace(/\/+$/, '')
+    if (existsSync(join(normalizedPath, 'nuxt.config.ts')) || existsSync(join(normalizedPath, 'nuxt.config.js'))) {
+      return normalizedPath
     }
-    if (existsSync(join(path, 'package.json'))) {
+    if (existsSync(join(normalizedPath, 'package.json'))) {
       try {
-        const pkg = JSON.parse(readFileSync(join(path, 'package.json'), 'utf-8'))
-        if (pkg.dependencies?.nuxt || pkg.devDependencies?.nuxt) {
-          return path
+        const pkg = JSON.parse(readFileSync(join(normalizedPath, 'package.json'), 'utf-8'))
+        // Make sure it's the main project, not the module itself
+        if ((pkg.dependencies?.nuxt || pkg.devDependencies?.nuxt) && pkg.name !== '@neskeep/nuxt-cms') {
+          return normalizedPath
         }
       } catch {}
     }
