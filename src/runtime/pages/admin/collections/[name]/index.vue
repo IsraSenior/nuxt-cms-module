@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { ref, computed } from 'vue'
+import { definePageMeta, useRoute, useRuntimeConfig, useFetch, navigateTo } from '#imports'
+import { useCmsCollection } from '../../../../composables/useCmsCollection'
+
 definePageMeta({
   middleware: 'cms-auth'
 })

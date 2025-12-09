@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { definePageMeta, useRuntimeConfig, useFetch } from '#imports'
+import { useCmsAdmin } from '../../composables/useCmsAdmin'
+
 definePageMeta({
   middleware: 'cms-auth'
 })

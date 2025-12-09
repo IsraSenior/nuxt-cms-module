@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { definePageMeta } from '#imports'
+import { useCmsMedia } from '../../composables/useCmsMedia'
+
 definePageMeta({
   middleware: 'cms-auth'
 })

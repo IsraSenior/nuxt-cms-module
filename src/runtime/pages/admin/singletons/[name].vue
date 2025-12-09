@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { ref, computed, watch } from 'vue'
+import { definePageMeta, useRoute, useRuntimeConfig, useFetch } from '#imports'
+import { useCmsSingleton } from '../../../composables/useCmsSingleton'
+
 definePageMeta({
   middleware: 'cms-auth'
 })

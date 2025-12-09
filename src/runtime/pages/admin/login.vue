@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { reactive, onMounted } from 'vue'
+import { definePageMeta, useRuntimeConfig, navigateTo } from '#imports'
+import { useCmsAdmin } from '../../composables/useCmsAdmin'
+
 definePageMeta({
   layout: false
 })
