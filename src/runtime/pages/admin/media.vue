@@ -70,14 +70,21 @@ function selectItem(item: any) {
           <p class="page__subtitle">{{ total }} {{ total === 1 ? 'file' : 'files' }}</p>
         </div>
 
-        <UButton
-          color="primary"
-          icon="i-heroicons-arrow-up-tray"
-          :loading="uploading"
+        <button
+          type="button"
+          class="cms-btn cms-btn--primary"
+          :disabled="uploading"
           @click="openFilePicker"
         >
+          <svg v-if="uploading" class="cms-btn__spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="cms-btn__icon">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+          </svg>
           Upload
-        </UButton>
+        </button>
       </div>
 
       <input
@@ -93,26 +100,32 @@ function selectItem(item: any) {
         <div class="media-grid-container">
           <!-- Loading state -->
           <div v-if="pending" class="loading-state">
-            <UIcon name="i-heroicons-arrow-path" class="loading-state__icon" />
+            <svg class="loading-state__icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+            </svg>
           </div>
 
           <!-- Empty state -->
           <div v-else-if="items.length === 0" class="empty-state">
             <div class="empty-state__icon">
-              <UIcon name="i-heroicons-photo" class="w-8 h-8" />
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+              </svg>
             </div>
             <h3 class="empty-state__title">No files uploaded</h3>
             <p class="empty-state__text">
               Upload your first file to get started
             </p>
-            <UButton
-              color="primary"
-              icon="i-heroicons-arrow-up-tray"
+            <button
+              type="button"
+              class="cms-btn cms-btn--primary"
               @click="openFilePicker"
-              class="empty-state__button"
             >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="cms-btn__icon">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+              </svg>
               Upload Files
-            </UButton>
+            </button>
           </div>
 
           <!-- Media grid -->
@@ -132,7 +145,9 @@ function selectItem(item: any) {
                 class="media-item__image"
               />
               <div v-else class="media-item__file">
-                <UIcon name="i-heroicons-document" class="media-item__file-icon" />
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="media-item__file-icon">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                </svg>
                 <span class="media-item__file-name">
                   {{ item.originalName }}
                 </span>
@@ -145,13 +160,15 @@ function selectItem(item: any) {
         <div v-if="selectedItem" class="details-panel">
           <div class="details-panel__header">
             <h3 class="details-panel__title">Details</h3>
-            <UButton
-              color="neutral"
-              variant="ghost"
-              icon="i-heroicons-x-mark"
-              size="sm"
+            <button
+              type="button"
+              class="details-panel__close"
               @click="selectedItem = null"
-            />
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
 
           <!-- Preview -->
@@ -163,7 +180,9 @@ function selectItem(item: any) {
               class="details-panel__preview-image"
             />
             <div v-else class="details-panel__preview-file">
-              <UIcon name="i-heroicons-document" class="w-12 h-12" />
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+              </svg>
             </div>
           </div>
 
@@ -194,46 +213,50 @@ function selectItem(item: any) {
           <!-- URL -->
           <div class="details-panel__field">
             <p class="details-panel__label">URL</p>
-            <UInput
-              :model-value="getUrl(selectedItem)"
+            <input
+              type="text"
+              class="details-panel__url-input"
+              :value="getUrl(selectedItem)"
               readonly
-              size="sm"
               @focus="($event.target as HTMLInputElement).select()"
             />
           </div>
 
           <!-- Actions -->
           <div class="details-panel__actions">
-            <UButton
-              color="neutral"
-              variant="outline"
-              icon="i-heroicons-arrow-top-right-on-square"
-              class="details-panel__action-btn"
-              :to="getUrl(selectedItem)"
+            <a
+              :href="getUrl(selectedItem)"
               target="_blank"
+              class="cms-btn cms-btn--outline details-panel__action-btn"
             >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="cms-btn__icon">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+              </svg>
               Open
-            </UButton>
-            <UButton
-              color="error"
-              variant="soft"
-              icon="i-heroicons-trash"
-              class="details-panel__action-btn"
+            </a>
+            <button
+              type="button"
+              class="cms-btn cms-btn--danger details-panel__action-btn"
               @click="showDeleteModal = true"
             >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="cms-btn__icon">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+              </svg>
               Delete
-            </UButton>
+            </button>
           </div>
         </div>
       </div>
 
       <!-- Delete confirmation modal -->
-      <UModal v-model:open="showDeleteModal">
-        <template #content>
+      <div v-if="showDeleteModal" class="modal-overlay" @click.self="showDeleteModal = false">
+        <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
               <div class="modal-icon modal-icon--danger">
-                <UIcon name="i-heroicons-exclamation-triangle" class="w-5 h-5" />
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                </svg>
               </div>
               <div>
                 <h3 class="modal-title">Delete file</h3>
@@ -241,21 +264,162 @@ function selectItem(item: any) {
               </div>
             </div>
             <div class="modal-actions">
-              <UButton color="neutral" variant="outline" @click="showDeleteModal = false">
+              <button type="button" class="cms-btn cms-btn--outline" @click="showDeleteModal = false">
                 Cancel
-              </UButton>
-              <UButton color="error" @click="confirmDelete">
+              </button>
+              <button type="button" class="cms-btn cms-btn--danger" @click="confirmDelete">
                 Delete
-              </UButton>
+              </button>
             </div>
           </div>
-        </template>
-      </UModal>
+        </div>
+      </div>
     </div>
   </CmsAdminLayout>
 </template>
 
 <style>
+/* CMS Buttons */
+.cms-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.cms-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cms-btn__icon {
+  width: 18px;
+  height: 18px;
+}
+
+.cms-btn__spinner {
+  width: 18px;
+  height: 18px;
+  animation: spin 1s linear infinite;
+}
+
+.cms-btn--primary {
+  background-color: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+.cms-btn--primary:hover:not(:disabled) {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.cms-btn--outline {
+  background-color: white;
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+.cms-btn--outline:hover:not(:disabled) {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.cms-btn--danger {
+  background-color: #dc2626;
+  color: white;
+  border-color: #dc2626;
+}
+
+.cms-btn--danger:hover:not(:disabled) {
+  background-color: #b91c1c;
+  border-color: #b91c1c;
+}
+
+/* Details panel close button */
+.details-panel__close {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.details-panel__close:hover {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.details-panel__close svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* URL Input */
+.details-panel__url-input {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 13px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: #f9fafb;
+  color: #374151;
+}
+
+.details-panel__url-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  background-color: white;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal-dialog {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  max-width: 400px;
+  width: 90%;
+}
+
+/* Utility classes */
+.w-5 { width: 20px; }
+.h-5 { height: 20px; }
+.w-8 { width: 32px; }
+.h-8 { height: 32px; }
+.w-12 { width: 48px; }
+.h-12 { height: 48px; }
+.opacity-25 { opacity: 0.25; }
+.opacity-75 { opacity: 0.75; }
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 /* Media Page */
 .media-page {
   display: flex;
@@ -279,18 +443,10 @@ function selectItem(item: any) {
   letter-spacing: -0.02em;
 }
 
-:root.dark .page__title {
-  color: white;
-}
-
 .page__subtitle {
   font-size: 15px;
   color: #6b7280;
   margin-top: 4px;
-}
-
-:root.dark .page__subtitle {
-  color: #9ca3af;
 }
 
 /* Hidden Input */
@@ -342,11 +498,6 @@ function selectItem(item: any) {
   text-align: center;
 }
 
-:root.dark .empty-state {
-  background-color: #111827;
-  border-color: #1f2937;
-}
-
 .empty-state__icon {
   width: 64px;
   height: 64px;
@@ -359,11 +510,6 @@ function selectItem(item: any) {
   margin-bottom: 20px;
 }
 
-:root.dark .empty-state__icon {
-  background-color: #1f2937;
-  color: #6b7280;
-}
-
 .empty-state__title {
   font-size: 18px;
   font-weight: 600;
@@ -371,19 +517,11 @@ function selectItem(item: any) {
   margin-bottom: 8px;
 }
 
-:root.dark .empty-state__title {
-  color: white;
-}
-
 .empty-state__text {
   font-size: 14px;
   color: #6b7280;
   max-width: 320px;
   margin-bottom: 20px;
-}
-
-:root.dark .empty-state__text {
-  color: #9ca3af;
 }
 
 /* Media Grid */
@@ -431,20 +569,6 @@ function selectItem(item: any) {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
 
-:root.dark .media-item {
-  background-color: #111827;
-  border-color: #1f2937;
-}
-
-:root.dark .media-item:hover {
-  border-color: #374151;
-}
-
-:root.dark .media-item--selected {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
-}
-
 .media-item__image {
   width: 100%;
   height: 100%;
@@ -460,10 +584,6 @@ function selectItem(item: any) {
   justify-content: center;
   padding: 12px;
   background-color: #f9fafb;
-}
-
-:root.dark .media-item__file {
-  background-color: #1f2937;
 }
 
 .media-item__file-icon {
@@ -484,10 +604,6 @@ function selectItem(item: any) {
   overflow: hidden;
 }
 
-:root.dark .media-item__file-name {
-  color: #9ca3af;
-}
-
 /* Details Panel */
 .details-panel {
   width: 320px;
@@ -502,11 +618,6 @@ function selectItem(item: any) {
   height: fit-content;
 }
 
-:root.dark .details-panel {
-  background-color: #111827;
-  border-color: #1f2937;
-}
-
 .details-panel__header {
   display: flex;
   align-items: center;
@@ -519,19 +630,11 @@ function selectItem(item: any) {
   color: #111827;
 }
 
-:root.dark .details-panel__title {
-  color: white;
-}
-
 .details-panel__preview {
   aspect-ratio: 16/9;
   background-color: #f3f4f6;
   border-radius: 12px;
   overflow: hidden;
-}
-
-:root.dark .details-panel__preview {
-  background-color: #1f2937;
 }
 
 .details-panel__preview-image {
@@ -572,10 +675,6 @@ function selectItem(item: any) {
   color: #6b7280;
 }
 
-:root.dark .details-panel__label {
-  color: #9ca3af;
-}
-
 .details-panel__value {
   font-size: 14px;
   font-weight: 500;
@@ -586,10 +685,6 @@ function selectItem(item: any) {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-:root.dark .details-panel__value {
-  color: white;
 }
 
 .details-panel__actions {
@@ -628,29 +723,16 @@ function selectItem(item: any) {
   color: #dc2626;
 }
 
-:root.dark .modal-icon--danger {
-  background-color: rgba(239, 68, 68, 0.15);
-  color: #f87171;
-}
-
 .modal-title {
   font-size: 16px;
   font-weight: 600;
   color: #111827;
 }
 
-:root.dark .modal-title {
-  color: white;
-}
-
 .modal-text {
   font-size: 14px;
   color: #6b7280;
   margin-top: 4px;
-}
-
-:root.dark .modal-text {
-  color: #9ca3af;
 }
 
 .modal-actions {

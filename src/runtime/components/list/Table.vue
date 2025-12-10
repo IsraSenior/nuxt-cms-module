@@ -158,11 +158,6 @@ function handleSort(col: Column) {
   border-bottom: 1px solid #e5e7eb;
 }
 
-:root.dark .cms-table__head {
-  background-color: #1f2937;
-  border-bottom-color: #374151;
-}
-
 .cms-table__th {
   padding: 12px 16px;
   text-align: left;
@@ -172,10 +167,6 @@ function handleSort(col: Column) {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   white-space: nowrap;
-}
-
-:root.dark .cms-table__th {
-  color: #9ca3af;
 }
 
 .cms-table__th--sortable {
@@ -188,16 +179,8 @@ function handleSort(col: Column) {
   background-color: #f3f4f6;
 }
 
-:root.dark .cms-table__th--sortable:hover {
-  background-color: #374151;
-}
-
 .cms-table__th--sorted {
   color: #2563eb;
-}
-
-:root.dark .cms-table__th--sorted {
-  color: #60a5fa;
 }
 
 .cms-table__th--center {
@@ -225,26 +208,14 @@ function handleSort(col: Column) {
   color: #2563eb;
 }
 
-:root.dark .cms-table__icon {
-  color: #60a5fa;
-}
-
 .cms-table__icon--inactive {
   color: #9ca3af;
   opacity: 0.5;
 }
 
-:root.dark .cms-table__icon--inactive {
-  color: #6b7280;
-}
-
 /* Table Body */
 .cms-table__body {
   background-color: white;
-}
-
-:root.dark .cms-table__body {
-  background-color: #111827;
 }
 
 /* Table Row */
@@ -254,16 +225,8 @@ function handleSort(col: Column) {
   transition: background-color 0.15s ease;
 }
 
-:root.dark .cms-table__row {
-  border-bottom-color: #1f2937;
-}
-
 .cms-table__row:hover {
   background-color: #f9fafb;
-}
-
-:root.dark .cms-table__row:hover {
-  background-color: #1f2937;
 }
 
 .cms-table__row:last-child {
@@ -276,10 +239,6 @@ function handleSort(col: Column) {
   font-size: 14px;
   color: #111827;
   vertical-align: middle;
-}
-
-:root.dark .cms-table__td {
-  color: #f3f4f6;
 }
 
 .cms-table__td--center {
@@ -304,10 +263,6 @@ function handleSort(col: Column) {
   color: #6b7280;
 }
 
-:root.dark .cms-table__loading-content {
-  color: #9ca3af;
-}
-
 .cms-table__spinner {
   width: 20px;
   height: 20px;
@@ -315,11 +270,6 @@ function handleSort(col: Column) {
   border-top-color: #2563eb;
   border-radius: 50%;
   animation: cms-table-spin 0.8s linear infinite;
-}
-
-:root.dark .cms-table__spinner {
-  border-color: #374151;
-  border-top-color: #60a5fa;
 }
 
 @keyframes cms-table-spin {
@@ -335,7 +285,4 @@ function handleSort(col: Column) {
   font-size: 14px;
 }
 
-:root.dark .cms-table__empty {
-  color: #9ca3af;
-}
 </style>

@@ -55,32 +55,50 @@ export default defineEventHandler(async (event) => {
     .limit(params.perPage)
     .offset(offset)
 
-  // Get translations if locale is specified
-  if (params.locale) {
-    const contentIds = items.map(item => item.id)
+  // Always get translations to merge with items (use default locale if not specified)
+  const contentIds = items.map(item => item.id)
 
-    if (contentIds.length > 0) {
-      const translations = await db
-        .select()
-        .from(translationsTable)
-        .where(
-          and(
-            sql`${translationsTable.contentId} IN ${contentIds}`,
-            eq(translationsTable.locale, params.locale)
-          )
-        )
+  if (contentIds.length > 0) {
+    // Get all translations for these items
+    const allTranslations = await db
+      .select()
+      .from(translationsTable)
+      .where(sql`${translationsTable.contentId} IN (${sql.join(contentIds.map(id => sql`${id}`), sql`, `)})`)
 
-      // Merge translations with items
-      const translationsMap = new Map(translations.map(t => [t.contentId, t.data]))
+    // Group translations by content ID
+    const translationsByContent = new Map<string, Map<string, Record<string, unknown>>>()
+    for (const t of allTranslations) {
+      if (!translationsByContent.has(t.contentId)) {
+        translationsByContent.set(t.contentId, new Map())
+      }
+      translationsByContent.get(t.contentId)!.set(t.locale, t.data as Record<string, unknown>)
+    }
 
-      items = items.map(item => ({
+    // Merge translations with items
+    // Priority: specified locale > first available translation
+    items = items.map(item => {
+      const itemTranslations = translationsByContent.get(item.id)
+      if (!itemTranslations || itemTranslations.size === 0) {
+        return item
+      }
+
+      // Get the translation to use (specified locale or first available)
+      let translationData: Record<string, unknown> | undefined
+      if (params.locale && itemTranslations.has(params.locale)) {
+        translationData = itemTranslations.get(params.locale)
+      } else {
+        // Use first available translation (typically the default locale)
+        translationData = itemTranslations.values().next().value
+      }
+
+      return {
         ...item,
         data: {
-          ...item.data,
-          ...translationsMap.get(item.id)
+          ...(item.data as Record<string, unknown>),
+          ...translationData
         }
-      }))
-    }
+      }
+    })
   }
 
   return {

@@ -65,10 +65,6 @@ const required = computed(() => props.field.required || false)
   color: #374151;
 }
 
-:root.dark .cms-field__label {
-  color: #d1d5db;
-}
-
 .cms-field__required {
   color: #dc2626;
   margin-left: 2px;
@@ -109,29 +105,10 @@ const required = computed(() => props.field.required || false)
   box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
 }
 
-:root.dark .cms-field__input {
-  background-color: #1f2937;
-  border-color: #374151;
-  color: #f3f4f6;
-}
-
-:root.dark .cms-field__input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-}
-
-:root.dark .cms-field__input--disabled {
-  background-color: #111827;
-}
-
 .cms-field__help {
   font-size: 12px;
   color: #6b7280;
   margin: 0;
-}
-
-:root.dark .cms-field__help {
-  color: #9ca3af;
 }
 
 .cms-field__error {
@@ -140,7 +117,4 @@ const required = computed(() => props.field.required || false)
   margin: 0;
 }
 
-:root.dark .cms-field__error {
-  color: #f87171;
-}
 </style>

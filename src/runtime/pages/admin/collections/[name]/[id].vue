@@ -33,6 +33,13 @@ const saving = ref(false)
 const errors = ref<Record<string, string>>({})
 const showDeleteModal = ref(false)
 
+// Breadcrumbs
+const breadcrumbs = computed(() => [
+  { label: 'Collections', to: `${config.public.cms.adminPath}/collections` },
+  { label: collectionConfig.value.labelPlural || collectionConfig.value.label, to: `${config.public.cms.adminPath}/collections/${collectionName}` },
+  { label: 'Edit' }
+])
+
 // Initialize from fetched data
 watch(item, (newItem) => {
   if (newItem) {
@@ -91,46 +98,35 @@ function handleCancel() {
 
 <template>
   <CmsAdminLayout>
-    <div class="form-page">
+    <div class="cms-form-page">
       <!-- Header with Actions -->
-      <div class="form-page__header">
-        <div class="form-page__header-left">
-          <div class="breadcrumb">
-            <NuxtLink
-              :to="`${config.public.cms.adminPath}/collections`"
-              class="breadcrumb__link"
-            >
-              Collections
-            </NuxtLink>
-            <UIcon name="i-heroicons-chevron-right" class="breadcrumb__separator" />
-            <NuxtLink
-              :to="`${config.public.cms.adminPath}/collections/${collectionName}`"
-              class="breadcrumb__link"
-            >
-              {{ collectionConfig.labelPlural || collectionConfig.label }}
-            </NuxtLink>
-            <UIcon name="i-heroicons-chevron-right" class="breadcrumb__separator" />
-            <span class="breadcrumb__current">Edit</span>
+      <CmsPageHeader
+        :title="`Edit ${collectionConfig.label}`"
+        :breadcrumbs="breadcrumbs"
+        :status="currentStatus"
+      >
+        <template #actions>
+          <!-- Publish Date input (if field exists) -->
+          <div v-if="collectionConfig.fields?.publishedAt" class="cms-form-page__date-field">
+            <label class="cms-form-page__date-label">Publish Date</label>
+            <input
+              type="datetime-local"
+              class="cms-form-page__date-input"
+              :value="formData.publishedAt ? new Date(formData.publishedAt as string).toISOString().slice(0, 16) : ''"
+              @input="formData.publishedAt = ($event.target as HTMLInputElement).value ? new Date(($event.target as HTMLInputElement).value).toISOString() : null"
+              :disabled="saving"
+            />
           </div>
-          <div class="form-page__title-row">
-            <h1 class="form-page__title">
-              Edit {{ collectionConfig.label }}
-            </h1>
-            <span class="status-badge" :class="`status-badge--${currentStatus}`">
-              {{ currentStatus }}
-            </span>
-          </div>
-        </div>
 
-        <!-- Actions in Header -->
-        <div class="form-page__actions">
           <button
             type="button"
             class="cms-btn cms-btn--danger-outline"
             :disabled="saving"
             @click="showDeleteModal = true"
           >
-            <UIcon name="i-heroicons-trash" class="cms-btn__icon" />
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="cms-btn__icon">
+              <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 1 0 .23 1.482l.149-.022.841 10.518A2.75 2.75 0 0 0 7.596 19h4.807a2.75 2.75 0 0 0 2.742-2.53l.841-10.519.149.023a.75.75 0 0 0 .23-1.482A41.03 41.03 0 0 0 14 4.193V3.75A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4ZM8.58 7.72a.75.75 0 0 0-1.5.06l.3 7.5a.75.75 0 1 0 1.5-.06l-.3-7.5Zm4.34.06a.75.75 0 1 0-1.5-.06l-.3 7.5a.75.75 0 1 0 1.5.06l.3-7.5Z" clip-rule="evenodd" />
+            </svg>
             Delete
           </button>
           <button
@@ -157,7 +153,9 @@ function handleCancel() {
             :disabled="saving"
             @click="handlePublish"
           >
-            <UIcon name="i-heroicons-check" class="cms-btn__icon" />
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="cms-btn__icon">
+              <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+            </svg>
             Publish
           </button>
           <button
@@ -167,14 +165,16 @@ function handleCancel() {
             :disabled="saving"
             @click="handleUnpublish"
           >
-            <UIcon name="i-heroicons-arrow-uturn-left" class="cms-btn__icon" />
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="cms-btn__icon">
+              <path fill-rule="evenodd" d="M7.793 2.232a.75.75 0 0 1-.025 1.06L3.622 7.25h10.003a5.375 5.375 0 0 1 0 10.75H10.75a.75.75 0 0 1 0-1.5h2.875a3.875 3.875 0 0 0 0-7.75H3.622l4.146 3.957a.75.75 0 0 1-1.036 1.085l-5.5-5.25a.75.75 0 0 1 0-1.085l5.5-5.25a.75.75 0 0 1 1.06.025Z" clip-rule="evenodd" />
+            </svg>
             Unpublish
           </button>
-        </div>
-      </div>
+        </template>
+      </CmsPageHeader>
 
       <!-- Form -->
-      <div class="form-card">
+      <CmsFormCard>
         <CmsForm
           :fields="collectionConfig.fields"
           v-model="formData"
@@ -183,394 +183,61 @@ function handleCancel() {
           :locales="locales"
           :errors="errors"
           :disabled="saving"
+          :exclude-fields="['publishedAt']"
           @submit="handleSubmit"
         />
-      </div>
+      </CmsFormCard>
 
       <!-- Delete confirmation modal -->
-      <UModal v-model:open="showDeleteModal">
-        <template #content>
-          <div class="modal-content">
-            <div class="modal-header">
-              <div class="modal-icon modal-icon--danger">
-                <UIcon name="i-heroicons-exclamation-triangle" class="w-5 h-5" />
-              </div>
-              <div>
-                <h3 class="modal-title">Delete item</h3>
-                <p class="modal-text">This action cannot be undone.</p>
-              </div>
-            </div>
-            <div class="modal-actions">
-              <button type="button" class="cms-btn cms-btn--outline" @click="showDeleteModal = false">
-                Cancel
-              </button>
-              <button type="button" class="cms-btn cms-btn--danger" @click="handleDelete">
-                Delete
-              </button>
-            </div>
-          </div>
-        </template>
-      </UModal>
+      <CmsConfirmModal
+        v-model:show="showDeleteModal"
+        title="Delete item"
+        message="This action cannot be undone."
+        confirm-label="Delete"
+        variant="danger"
+        @confirm="handleDelete"
+      />
     </div>
   </CmsAdminLayout>
 </template>
 
 <style>
-/* Form Page */
-.form-page {
+/* Form Page Layout */
+.cms-form-page {
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
-.form-page__header {
+/* Date field in header */
+.cms-form-page__date-field {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 16px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #e5e7eb;
+  flex-direction: column;
+  gap: 4px;
+  margin-right: 8px;
 }
 
-:root.dark .form-page__header {
-  border-bottom-color: #374151;
-}
-
-.form-page__header-left {
-  flex: 1;
-  min-width: 200px;
-}
-
-.form-page__title-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.form-page__title {
-  font-size: 28px;
-  font-weight: 700;
-  color: #111827;
-  letter-spacing: -0.02em;
-  margin: 0;
-}
-
-:root.dark .form-page__title {
-  color: white;
-}
-
-.form-page__actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-/* Breadcrumb */
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  margin-bottom: 8px;
-}
-
-.breadcrumb__link {
-  color: #6b7280;
-  text-decoration: none;
-  transition: color 0.15s ease;
-}
-
-.breadcrumb__link:hover {
-  color: #374151;
-}
-
-:root.dark .breadcrumb__link {
-  color: #9ca3af;
-}
-
-:root.dark .breadcrumb__link:hover {
-  color: #d1d5db;
-}
-
-.breadcrumb__separator {
-  width: 16px;
-  height: 16px;
-  color: #9ca3af;
-}
-
-:root.dark .breadcrumb__separator {
-  color: #6b7280;
-}
-
-.breadcrumb__current {
-  color: #111827;
+.cms-form-page__date-label {
+  font-size: 11px;
   font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-:root.dark .breadcrumb__current {
-  color: white;
-}
-
-/* Form Card */
-.form-card {
+.cms-form-page__date-input {
+  padding: 6px 10px;
+  font-size: 13px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
   background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  padding: 24px;
-}
-
-:root.dark .form-card {
-  background-color: #111827;
-  border-color: #1f2937;
-}
-
-/* Status Badge */
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 9999px;
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: capitalize;
-}
-
-.status-badge--published {
-  background-color: #dcfce7;
-  color: #166534;
-}
-
-:root.dark .status-badge--published {
-  background-color: rgba(34, 197, 94, 0.15);
-  color: #4ade80;
-}
-
-.status-badge--draft {
-  background-color: #fef3c7;
-  color: #92400e;
-}
-
-:root.dark .status-badge--draft {
-  background-color: rgba(234, 179, 8, 0.15);
-  color: #facc15;
-}
-
-.status-badge--archived {
-  background-color: #f3f4f6;
-  color: #4b5563;
-}
-
-:root.dark .status-badge--archived {
-  background-color: rgba(107, 114, 128, 0.15);
-  color: #9ca3af;
-}
-
-/* Modal */
-.modal-content {
-  padding: 24px;
-}
-
-.modal-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.modal-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.modal-icon--danger {
-  background-color: #fee2e2;
-  color: #dc2626;
-}
-
-:root.dark .modal-icon--danger {
-  background-color: rgba(239, 68, 68, 0.15);
-  color: #f87171;
-}
-
-.modal-title {
-  font-size: 16px;
-  font-weight: 600;
   color: #111827;
+  min-width: 180px;
 }
 
-:root.dark .modal-title {
-  color: white;
-}
-
-.modal-text {
-  font-size: 14px;
-  color: #6b7280;
-  margin-top: 4px;
-}
-
-:root.dark .modal-text {
-  color: #9ca3af;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}
-
-/* CMS Button Styles */
-.cms-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 8px 14px;
-  font-size: 14px;
-  font-weight: 500;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
-  border: 1px solid transparent;
-  white-space: nowrap;
-}
-
-.cms-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.cms-btn:active:not(:disabled) {
-  transform: scale(0.98);
-}
-
-.cms-btn__icon {
-  width: 16px;
-  height: 16px;
-}
-
-.cms-btn__spinner {
-  width: 14px;
-  height: 14px;
-  border: 2px solid currentColor;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-/* Primary Button (Blue) */
-.cms-btn--primary {
-  background-color: #2563eb;
-  color: white;
+.cms-form-page__date-input:focus {
+  outline: none;
   border-color: #2563eb;
-}
-
-.cms-btn--primary:hover:not(:disabled) {
-  background-color: #1d4ed8;
-  border-color: #1d4ed8;
-}
-
-/* Secondary Button (Gray solid) */
-.cms-btn--secondary {
-  background-color: #374151;
-  color: white;
-  border-color: #374151;
-}
-
-.cms-btn--secondary:hover:not(:disabled) {
-  background-color: #1f2937;
-  border-color: #1f2937;
-}
-
-:root.dark .cms-btn--secondary {
-  background-color: #4b5563;
-  border-color: #4b5563;
-}
-
-:root.dark .cms-btn--secondary:hover:not(:disabled) {
-  background-color: #6b7280;
-  border-color: #6b7280;
-}
-
-/* Outline Button */
-.cms-btn--outline {
-  background-color: white;
-  color: #374151;
-  border-color: #d1d5db;
-}
-
-.cms-btn--outline:hover:not(:disabled) {
-  background-color: #f3f4f6;
-  border-color: #9ca3af;
-}
-
-:root.dark .cms-btn--outline {
-  background-color: #1f2937;
-  color: #d1d5db;
-  border-color: #4b5563;
-}
-
-:root.dark .cms-btn--outline:hover:not(:disabled) {
-  background-color: #374151;
-  border-color: #6b7280;
-}
-
-/* Danger Button (Red solid) */
-.cms-btn--danger {
-  background-color: #dc2626;
-  color: white;
-  border-color: #dc2626;
-}
-
-.cms-btn--danger:hover:not(:disabled) {
-  background-color: #b91c1c;
-  border-color: #b91c1c;
-}
-
-/* Danger Outline Button */
-.cms-btn--danger-outline {
-  background-color: white;
-  color: #dc2626;
-  border-color: #fca5a5;
-}
-
-.cms-btn--danger-outline:hover:not(:disabled) {
-  background-color: #fef2f2;
-  border-color: #f87171;
-}
-
-:root.dark .cms-btn--danger-outline {
-  background-color: transparent;
-  color: #f87171;
-  border-color: #7f1d1d;
-}
-
-:root.dark .cms-btn--danger-outline:hover:not(:disabled) {
-  background-color: rgba(239, 68, 68, 0.1);
-  border-color: #b91c1c;
-}
-
-/* Warning Button (Orange) */
-.cms-btn--warning {
-  background-color: #f59e0b;
-  color: white;
-  border-color: #f59e0b;
-}
-
-.cms-btn--warning:hover:not(:disabled) {
-  background-color: #d97706;
-  border-color: #d97706;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
 }
 </style>

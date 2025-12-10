@@ -119,7 +119,11 @@ function removeImage() {
         Uploading...
       </div>
       <div v-else class="cms-image__placeholder">
-        <div class="cms-image__icon">📷</div>
+        <div class="cms-image__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="cms-image__svg">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+          </svg>
+        </div>
         <div class="cms-image__text">Click to upload an image</div>
         <div class="cms-image__hint">or drag and drop</div>
       </div>
@@ -136,8 +140,11 @@ function removeImage() {
         type="button"
         class="cms-image__remove"
         @click="removeImage"
+        title="Remove image"
       >
-        ✕
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="cms-image__remove-icon">
+          <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+        </svg>
       </button>
     </div>
 
@@ -159,10 +166,6 @@ function removeImage() {
   color: #374151;
 }
 
-:root.dark .cms-field__label {
-  color: #d1d5db;
-}
-
 .cms-field__required {
   color: #dc2626;
   margin-left: 2px;
@@ -174,18 +177,10 @@ function removeImage() {
   margin: 0;
 }
 
-:root.dark .cms-field__help {
-  color: #9ca3af;
-}
-
 .cms-field__error {
   font-size: 12px;
   color: #dc2626;
   margin: 0;
-}
-
-:root.dark .cms-field__error {
-  color: #f87171;
 }
 
 .cms-image__hidden-input {
@@ -206,15 +201,6 @@ function removeImage() {
   background-color: #f9fafb;
 }
 
-:root.dark .cms-image__dropzone {
-  border-color: #4b5563;
-}
-
-:root.dark .cms-image__dropzone:hover {
-  border-color: #6b7280;
-  background-color: #1f2937;
-}
-
 .cms-image__dropzone--disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -233,10 +219,6 @@ function removeImage() {
   color: #6b7280;
 }
 
-:root.dark .cms-image__uploading {
-  color: #9ca3af;
-}
-
 .cms-image__spinner {
   width: 20px;
   height: 20px;
@@ -252,16 +234,22 @@ function removeImage() {
 }
 
 .cms-image__placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   color: #6b7280;
 }
 
-:root.dark .cms-image__placeholder {
+.cms-image__icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
   color: #9ca3af;
 }
 
-.cms-image__icon {
-  font-size: 40px;
-  margin-bottom: 8px;
+.cms-image__svg {
+  width: 48px;
+  height: 48px;
 }
 
 .cms-image__text {
@@ -272,10 +260,6 @@ function removeImage() {
   font-size: 12px;
   color: #9ca3af;
   margin-top: 4px;
-}
-
-:root.dark .cms-image__hint {
-  color: #6b7280;
 }
 
 .cms-image__preview {
@@ -289,10 +273,6 @@ function removeImage() {
   max-height: 256px;
   border-radius: 12px;
   border: 1px solid #e5e7eb;
-}
-
-:root.dark .cms-image__img {
-  border-color: #374151;
 }
 
 .cms-image__remove {
@@ -315,5 +295,10 @@ function removeImage() {
 
 .cms-image__remove:hover {
   background-color: #b91c1c;
+}
+
+.cms-image__remove-icon {
+  width: 16px;
+  height: 16px;
 }
 </style>

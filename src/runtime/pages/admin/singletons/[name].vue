@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { definePageMeta, useRoute, useRuntimeConfig, useFetch } from '#imports'
+import { definePageMeta, useRoute, useRuntimeConfig, useFetch, navigateTo } from '#imports'
 import { useCmsSingleton } from '../../../composables/useCmsSingleton'
 
 definePageMeta({
@@ -31,6 +31,12 @@ const currentLocale = ref(defaultLocale.value)
 const saving = ref(false)
 const errors = ref<Record<string, string>>({})
 const saved = ref(false)
+
+// Breadcrumbs
+const breadcrumbs = computed(() => [
+  { label: 'Singletons', to: `${config.public.cms.adminPath}/singletons` },
+  { label: singletonConfig.value.label }
+])
 
 // Watch for singleton data
 watch(() => singleton.value, () => {
@@ -70,39 +76,44 @@ function handleCancel() {
 
 <template>
   <CmsAdminLayout>
-    <div class="form-page">
-      <!-- Header -->
-      <div class="form-page__header">
-        <div class="breadcrumb">
-          <NuxtLink
-            :to="`${config.public.cms.adminPath}/singletons`"
-            class="breadcrumb__link"
+    <div class="cms-form-page cms-form-page--narrow">
+      <!-- Header with Actions -->
+      <CmsPageHeader
+        :title="singletonConfig.label"
+        :subtitle="singletonConfig.description"
+        :breadcrumbs="breadcrumbs"
+      >
+        <template #actions>
+          <button
+            type="button"
+            class="cms-btn cms-btn--outline"
+            :disabled="saving"
+            @click="handleCancel"
           >
-            Singletons
-          </NuxtLink>
-          <UIcon name="i-heroicons-chevron-right" class="breadcrumb__separator" />
-          <span class="breadcrumb__current">{{ singletonConfig.label }}</span>
-        </div>
-        <h1 class="form-page__title">
-          {{ singletonConfig.label }}
-        </h1>
-        <p v-if="singletonConfig.description" class="form-page__subtitle">
-          {{ singletonConfig.description }}
-        </p>
-      </div>
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="cms-btn cms-btn--primary"
+            :disabled="saving"
+            @click="handleSubmit"
+          >
+            <span v-if="saving" class="cms-btn__spinner"></span>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="cms-btn__icon">
+              <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+            </svg>
+            Save Changes
+          </button>
+        </template>
+      </CmsPageHeader>
 
       <!-- Success message -->
-      <UAlert
-        v-if="saved"
-        color="success"
-        variant="soft"
-        icon="i-heroicons-check-circle"
-        title="Changes saved successfully"
-        class="success-alert"
-      />
+      <CmsAlert v-if="saved" variant="success">
+        Changes saved successfully
+      </CmsAlert>
 
       <!-- Form -->
-      <div class="form-card">
+      <CmsFormCard>
         <CmsForm
           :fields="singletonConfig.fields"
           v-model="formData"
@@ -112,142 +123,21 @@ function handleCancel() {
           :errors="errors"
           :disabled="saving"
           @submit="handleSubmit"
-        >
-          <template #actions>
-            <div class="form-actions">
-              <UButton
-                color="neutral"
-                variant="outline"
-                :disabled="saving"
-                @click="handleCancel"
-              >
-                Cancel
-              </UButton>
-              <UButton
-                type="submit"
-                color="primary"
-                icon="i-heroicons-check"
-                :loading="saving"
-              >
-                Save Changes
-              </UButton>
-            </div>
-          </template>
-        </CmsForm>
-      </div>
+        />
+      </CmsFormCard>
     </div>
   </CmsAdminLayout>
 </template>
 
 <style>
-/* Form Page */
-.form-page {
-  max-width: 896px;
+/* Form Page Layout */
+.cms-form-page {
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
-.form-page__header {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.form-page__title {
-  font-size: 28px;
-  font-weight: 700;
-  color: #111827;
-  letter-spacing: -0.02em;
-}
-
-:root.dark .form-page__title {
-  color: white;
-}
-
-.form-page__subtitle {
-  font-size: 15px;
-  color: #6b7280;
-}
-
-:root.dark .form-page__subtitle {
-  color: #9ca3af;
-}
-
-/* Breadcrumb */
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-}
-
-.breadcrumb__link {
-  color: #6b7280;
-  text-decoration: none;
-  transition: color 0.15s ease;
-}
-
-.breadcrumb__link:hover {
-  color: #374151;
-}
-
-:root.dark .breadcrumb__link {
-  color: #9ca3af;
-}
-
-:root.dark .breadcrumb__link:hover {
-  color: #d1d5db;
-}
-
-.breadcrumb__separator {
-  width: 16px;
-  height: 16px;
-  color: #9ca3af;
-}
-
-:root.dark .breadcrumb__separator {
-  color: #6b7280;
-}
-
-.breadcrumb__current {
-  color: #111827;
-  font-weight: 500;
-}
-
-:root.dark .breadcrumb__current {
-  color: white;
-}
-
-/* Success Alert */
-.success-alert {
-  border-radius: 12px;
-}
-
-/* Form Card */
-.form-card {
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  padding: 24px;
-}
-
-:root.dark .form-card {
-  background-color: #111827;
-  border-color: #1f2937;
-}
-
-/* Form Actions */
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid #e5e7eb;
-}
-
-:root.dark .form-actions {
-  border-top-color: #1f2937;
+.cms-form-page--narrow {
+  max-width: 896px;
 }
 </style>

@@ -107,14 +107,6 @@ function parseMarkdown(md: string): string {
   color: #374151;
 }
 
-:root.dark .markdown-toggle {
-  color: #9ca3af;
-}
-
-:root.dark .markdown-toggle:hover {
-  color: #d1d5db;
-}
-
 .markdown-preview {
   max-width: none;
   padding: 16px;
@@ -123,12 +115,6 @@ function parseMarkdown(md: string): string {
   background-color: #f9fafb;
   overflow: auto;
   color: #111827;
-}
-
-:root.dark .markdown-preview {
-  border-color: #374151;
-  background-color: #1f2937;
-  color: #f3f4f6;
 }
 
 .markdown-preview h1,
@@ -150,16 +136,9 @@ function parseMarkdown(md: string): string {
   font-size: 14px;
 }
 
-:root.dark .markdown-preview code {
-  background-color: #374151;
-}
-
 .markdown-preview a {
   color: #2563eb;
   text-decoration: underline;
 }
 
-:root.dark .markdown-preview a {
-  color: #60a5fa;
-}
 </style>

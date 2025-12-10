@@ -93,16 +93,25 @@ function toggleLock() {
         class="cms-slug__btn"
         :disabled="disabled"
         @click="toggleLock"
+        :title="isLocked ? 'Unlock to edit' : 'Lock slug'"
       >
-        {{ isLocked ? '🔒' : '🔓' }}
+        <svg v-if="isLocked" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="cms-slug__icon">
+          <path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd" />
+        </svg>
+        <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="cms-slug__icon">
+          <path fill-rule="evenodd" d="M14.5 1A4.5 4.5 0 0010 5.5V9H3a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-1.5V5.5a3 3 0 116 0v2.75a.75.75 0 001.5 0V5.5A4.5 4.5 0 0014.5 1z" clip-rule="evenodd" />
+        </svg>
       </button>
       <button
         type="button"
         class="cms-slug__btn"
         :disabled="disabled || !sourceValue"
         @click="regenerate"
+        title="Regenerate slug"
       >
-        ↻
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="cms-slug__icon">
+          <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 01-9.201 2.466l-.312-.311h2.433a.75.75 0 000-1.5H3.989a.75.75 0 00-.75.75v4.242a.75.75 0 001.5 0v-2.43l.31.31a7 7 0 0011.712-3.138.75.75 0 00-1.449-.39zm1.23-3.723a.75.75 0 00.219-.53V2.929a.75.75 0 00-1.5 0v2.43l-.31-.31A7 7 0 003.239 8.188a.75.75 0 101.448.389 5.5 5.5 0 019.2-2.466l.312.311h-2.433a.75.75 0 000 1.5h4.243a.75.75 0 00.53-.22z" clip-rule="evenodd" />
+        </svg>
       </button>
     </div>
     <p class="cms-field__help">{{ help }}</p>
@@ -140,21 +149,6 @@ function toggleLock() {
   opacity: 0.7;
 }
 
-:root.dark .cms-slug__input {
-  background-color: #1f2937;
-  border-color: #374151;
-  color: #f3f4f6;
-}
-
-:root.dark .cms-slug__input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-}
-
-:root.dark .cms-slug__input--disabled {
-  background-color: #111827;
-}
-
 .cms-slug__btn {
   padding: 10px 14px;
   font-size: 14px;
@@ -175,13 +169,8 @@ function toggleLock() {
   cursor: not-allowed;
 }
 
-:root.dark .cms-slug__btn {
-  background-color: #1f2937;
-  border-color: #374151;
-  color: #d1d5db;
-}
-
-:root.dark .cms-slug__btn:hover:not(:disabled) {
-  background-color: #374151;
+.cms-slug__icon {
+  width: 16px;
+  height: 16px;
 }
 </style>

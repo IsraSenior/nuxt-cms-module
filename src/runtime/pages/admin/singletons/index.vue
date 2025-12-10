@@ -100,18 +100,10 @@ const singletons = computed(() => {
   letter-spacing: -0.02em;
 }
 
-:root.dark .page__title {
-  color: white;
-}
-
 .page__subtitle {
   font-size: 15px;
   color: #6b7280;
   margin-top: 4px;
-}
-
-:root.dark .page__subtitle {
-  color: #9ca3af;
 }
 
 /* Card Grid */
@@ -151,15 +143,6 @@ const singletons = computed(() => {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-:root.dark .item-card {
-  background-color: #111827;
-  border-color: #1f2937;
-}
-
-:root.dark .item-card:hover {
-  border-color: #2563eb;
-}
-
 .item-card__icon {
   width: 48px;
   height: 48px;
@@ -176,16 +159,6 @@ const singletons = computed(() => {
 .item-card:hover .item-card__icon {
   background-color: #eff6ff;
   color: #2563eb;
-}
-
-:root.dark .item-card__icon {
-  background-color: #1f2937;
-  color: #9ca3af;
-}
-
-:root.dark .item-card:hover .item-card__icon {
-  background-color: rgba(37, 99, 235, 0.15);
-  color: #60a5fa;
 }
 
 .item-card__content {
@@ -206,14 +179,6 @@ const singletons = computed(() => {
   color: #2563eb;
 }
 
-:root.dark .item-card__title {
-  color: white;
-}
-
-:root.dark .item-card:hover .item-card__title {
-  color: #60a5fa;
-}
-
 .item-card__description {
   font-size: 13px;
   color: #6b7280;
@@ -221,10 +186,6 @@ const singletons = computed(() => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-:root.dark .item-card__description {
-  color: #9ca3af;
 }
 
 .item-card__arrow {
@@ -240,14 +201,6 @@ const singletons = computed(() => {
   transform: translateX(4px);
 }
 
-:root.dark .item-card__arrow {
-  color: #4b5563;
-}
-
-:root.dark .item-card:hover .item-card__arrow {
-  color: #60a5fa;
-}
-
 /* Empty State */
 .empty-state {
   display: flex;
@@ -259,11 +212,6 @@ const singletons = computed(() => {
   border: 1px solid #e5e7eb;
   border-radius: 16px;
   text-align: center;
-}
-
-:root.dark .empty-state {
-  background-color: #111827;
-  border-color: #1f2937;
 }
 
 .empty-state__icon {
@@ -278,11 +226,6 @@ const singletons = computed(() => {
   margin-bottom: 20px;
 }
 
-:root.dark .empty-state__icon {
-  background-color: #1f2937;
-  color: #6b7280;
-}
-
 .empty-state__title {
   font-size: 18px;
   font-weight: 600;
@@ -290,18 +233,10 @@ const singletons = computed(() => {
   margin-bottom: 8px;
 }
 
-:root.dark .empty-state__title {
-  color: white;
-}
-
 .empty-state__text {
   font-size: 14px;
   color: #6b7280;
   max-width: 320px;
-}
-
-:root.dark .empty-state__text {
-  color: #9ca3af;
 }
 
 .empty-state__code {
@@ -312,7 +247,4 @@ const singletons = computed(() => {
   font-family: ui-monospace, monospace;
 }
 
-:root.dark .empty-state__code {
-  background-color: #1f2937;
-}
 </style>

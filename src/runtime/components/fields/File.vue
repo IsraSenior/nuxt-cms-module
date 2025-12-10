@@ -74,54 +74,56 @@ function removeFile() {
   emit('update:modelValue', null)
   fileName.value = null
 }
-
-function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 B'
-  const k = 1024
-  const sizes = ['B', 'KB', 'MB', 'GB']
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`
-}
 </script>
 
 <template>
-  <UFormField
-    :label="label"
-    :required="required"
-    :help="help"
-    :error="error || uploadError"
-  >
+  <div class="cms-field">
+    <label class="cms-field__label">
+      {{ label }}
+      <span v-if="required" class="cms-field__required">*</span>
+    </label>
+
     <input
       ref="fileInput"
       type="file"
       :accept="field.accept?.join(',')"
-      class="hidden"
+      class="cms-file__hidden-input"
       @change="handleFileChange"
     />
 
     <div
       v-if="!modelValue"
-      class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors cursor-pointer"
-      :class="{ 'opacity-50 cursor-not-allowed': disabled }"
+      class="cms-file__dropzone"
+      :class="{ 'cms-file__dropzone--disabled': disabled }"
       @click="!disabled && openFilePicker()"
     >
-      <div v-if="uploading" class="text-gray-500">
+      <div v-if="uploading" class="cms-file__uploading">
+        <span class="cms-file__spinner"></span>
         Uploading...
       </div>
-      <div v-else class="text-gray-500">
-        <div class="text-3xl mb-2">📄</div>
-        <div class="text-sm">Click to upload a file</div>
+      <div v-else class="cms-file__placeholder">
+        <div class="cms-file__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="cms-file__svg">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+          </svg>
+        </div>
+        <div class="cms-file__text">Click to upload a file</div>
+        <div class="cms-file__hint">or drag and drop</div>
       </div>
     </div>
 
-    <div v-else class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
-      <div class="text-2xl">📄</div>
-      <div class="flex-1 min-w-0">
-        <div class="font-medium truncate">{{ fileName || modelValue }}</div>
+    <div v-else class="cms-file__preview">
+      <div class="cms-file__preview-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="cms-file__preview-svg">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+        </svg>
+      </div>
+      <div class="cms-file__info">
+        <div class="cms-file__name">{{ fileName || modelValue }}</div>
         <a
           :href="`/api/cms/media/file/${modelValue}`"
           target="_blank"
-          class="text-sm text-blue-500 hover:underline"
+          class="cms-file__download"
         >
           Download
         </a>
@@ -129,11 +131,192 @@ function formatFileSize(bytes: number): string {
       <button
         v-if="!disabled"
         type="button"
-        class="text-red-500 hover:text-red-600"
+        class="cms-file__remove"
         @click="removeFile"
+        title="Remove file"
       >
-        ✕
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="cms-file__remove-icon">
+          <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+        </svg>
       </button>
     </div>
-  </UFormField>
+
+    <p v-if="help && !error && !uploadError" class="cms-field__help">{{ help }}</p>
+    <p v-if="error || uploadError" class="cms-field__error">{{ error || uploadError }}</p>
+  </div>
 </template>
+
+<style>
+.cms-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cms-field__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.cms-field__required {
+  color: #dc2626;
+  margin-left: 2px;
+}
+
+.cms-field__help {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.cms-field__error {
+  font-size: 12px;
+  color: #dc2626;
+  margin: 0;
+}
+
+.cms-file__hidden-input {
+  display: none;
+}
+
+.cms-file__dropzone {
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  padding: 32px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.cms-file__dropzone:hover {
+  border-color: #9ca3af;
+  background-color: #f9fafb;
+}
+
+.cms-file__dropzone--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cms-file__dropzone--disabled:hover {
+  border-color: #d1d5db;
+  background-color: transparent;
+}
+
+.cms-file__uploading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #6b7280;
+}
+
+.cms-file__spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #d1d5db;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: cms-file-spin 0.8s linear infinite;
+}
+
+@keyframes cms-file-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.cms-file__placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #6b7280;
+}
+
+.cms-file__icon {
+  margin-bottom: 8px;
+  color: #9ca3af;
+}
+
+.cms-file__svg {
+  width: 48px;
+  height: 48px;
+}
+
+.cms-file__text {
+  font-size: 14px;
+}
+
+.cms-file__hint {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 4px;
+}
+
+.cms-file__preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background-color: #f9fafb;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.cms-file__preview-icon {
+  flex-shrink: 0;
+  color: #6b7280;
+}
+
+.cms-file__preview-svg {
+  width: 32px;
+  height: 32px;
+}
+
+.cms-file__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.cms-file__name {
+  font-weight: 500;
+  color: #111827;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cms-file__download {
+  font-size: 13px;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.cms-file__download:hover {
+  text-decoration: underline;
+}
+
+.cms-file__remove {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background-color: transparent;
+  color: #dc2626;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease;
+}
+
+.cms-file__remove:hover {
+  background-color: #fee2e2;
+}
+
+.cms-file__remove-icon {
+  width: 16px;
+  height: 16px;
+}
+</style>

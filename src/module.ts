@@ -249,6 +249,16 @@ const cmsModule: NuxtModule<CmsModuleOptions> = defineNuxtModule({
       global: true
     })
 
+    // Add layout components (PageHeader, FormCard, ConfirmModal, Alert)
+    addComponentsDir({
+      path: resolver.resolve('./runtime/components/layout'),
+      prefix: 'Cms',
+      global: true
+    })
+
+    // Add global CMS button styles
+    nuxt.options.css.push(resolver.resolve('./runtime/assets/cms-buttons.css'))
+
     // Add API routes
     addServerHandler({
       route: '/api/cms/auth/login',

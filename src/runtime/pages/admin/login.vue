@@ -150,10 +150,6 @@ onMounted(async () => {
   background-color: #f9fafb !important;
 }
 
-:root.dark .login {
-  background-color: #030712;
-}
-
 /* ============================================
    Branding Panel
    ============================================ */
@@ -305,10 +301,6 @@ onMounted(async () => {
   letter-spacing: -0.02em;
 }
 
-:root.dark .login__mobile-text {
-  color: white;
-}
-
 /* Header */
 .login__header {
   margin-bottom: 32px;
@@ -329,17 +321,9 @@ onMounted(async () => {
   letter-spacing: -0.02em;
 }
 
-:root.dark .login__title {
-  color: white;
-}
-
 .login__subtitle {
   font-size: 15px;
   color: #6b7280;
-}
-
-:root.dark .login__subtitle {
-  color: #9ca3af;
 }
 
 /* Error */
@@ -365,10 +349,6 @@ onMounted(async () => {
   font-size: 14px;
   font-weight: 500;
   color: #374151;
-}
-
-:root.dark .login__label {
-  color: #d1d5db;
 }
 
 .login__required {
@@ -409,17 +389,6 @@ onMounted(async () => {
   outline: none;
   border-color: #2563eb;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-:root.dark .login__input {
-  background-color: #1f2937;
-  border-color: #374151;
-  color: #f3f4f6;
-}
-
-:root.dark .login__input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
 /* Submit Button */
@@ -479,7 +448,4 @@ onMounted(async () => {
   font-weight: 500;
 }
 
-:root.dark .login__footer-brand {
-  color: #60a5fa;
-}
 </style>

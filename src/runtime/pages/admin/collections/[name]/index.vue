@@ -211,7 +211,9 @@ function formatDateTime(dateStr: string | null | undefined): string {
           :to="`${config.public.cms.adminPath}/collections/${collectionName}/new`"
           class="cms-btn cms-btn--primary"
         >
-          <span class="cms-btn__icon">+</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="cms-btn__icon">
+            <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
+          </svg>
           New {{ collectionConfig.label }}
         </NuxtLink>
       </div>
@@ -223,7 +225,11 @@ function formatDateTime(dateStr: string | null | undefined): string {
 
       <!-- Empty state -->
       <div v-else-if="items.length === 0" class="empty-state">
-        <div class="empty-state__icon">📄</div>
+        <div class="empty-state__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="empty-state__svg">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+          </svg>
+        </div>
         <h3 class="empty-state__title">No items yet</h3>
         <p class="empty-state__text">
           Create your first {{ collectionConfig.label?.toLowerCase() }}
@@ -232,7 +238,9 @@ function formatDateTime(dateStr: string | null | undefined): string {
           :to="`${config.public.cms.adminPath}/collections/${collectionName}/new`"
           class="cms-btn cms-btn--primary"
         >
-          <span class="cms-btn__icon">+</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="cms-btn__icon">
+            <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
+          </svg>
           Create {{ collectionConfig.label }}
         </NuxtLink>
       </div>
@@ -292,7 +300,11 @@ function formatDateTime(dateStr: string | null | undefined): string {
         <template #content>
           <div class="modal-content">
             <div class="modal-header">
-              <div class="modal-icon modal-icon--danger">⚠️</div>
+              <div class="modal-icon modal-icon--danger">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="modal-icon__svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                </svg>
+              </div>
               <div>
                 <h3 class="modal-title">Delete item</h3>
                 <p class="modal-text">This action cannot be undone.</p>
@@ -337,18 +349,10 @@ function formatDateTime(dateStr: string | null | undefined): string {
   margin: 0;
 }
 
-:root.dark .page__title {
-  color: white;
-}
-
 .page__subtitle {
   font-size: 15px;
   color: #6b7280;
   margin-top: 4px;
-}
-
-:root.dark .page__subtitle {
-  color: #9ca3af;
 }
 
 /* Breadcrumb */
@@ -370,30 +374,14 @@ function formatDateTime(dateStr: string | null | undefined): string {
   color: #374151;
 }
 
-:root.dark .breadcrumb__link {
-  color: #9ca3af;
-}
-
-:root.dark .breadcrumb__link:hover {
-  color: #d1d5db;
-}
-
 .breadcrumb__separator {
   color: #9ca3af;
   font-size: 16px;
 }
 
-:root.dark .breadcrumb__separator {
-  color: #6b7280;
-}
-
 .breadcrumb__current {
   color: #111827;
   font-weight: 500;
-}
-
-:root.dark .breadcrumb__current {
-  color: white;
 }
 
 /* Loading State */
@@ -411,11 +399,6 @@ function formatDateTime(dateStr: string | null | undefined): string {
   border-top-color: #2563eb;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
-}
-
-:root.dark .loading-state__spinner {
-  border-color: #374151;
-  border-top-color: #60a5fa;
 }
 
 @keyframes spin {
@@ -436,14 +419,14 @@ function formatDateTime(dateStr: string | null | undefined): string {
   text-align: center;
 }
 
-:root.dark .empty-state {
-  background-color: #111827;
-  border-color: #1f2937;
+.empty-state__icon {
+  margin-bottom: 16px;
+  color: #9ca3af;
 }
 
-.empty-state__icon {
-  font-size: 48px;
-  margin-bottom: 16px;
+.empty-state__svg {
+  width: 56px;
+  height: 56px;
 }
 
 .empty-state__title {
@@ -453,19 +436,11 @@ function formatDateTime(dateStr: string | null | undefined): string {
   margin: 0 0 8px 0;
 }
 
-:root.dark .empty-state__title {
-  color: white;
-}
-
 .empty-state__text {
   font-size: 14px;
   color: #6b7280;
   max-width: 320px;
   margin: 0 0 20px 0;
-}
-
-:root.dark .empty-state__text {
-  color: #9ca3af;
 }
 
 /* Table Container */
@@ -476,19 +451,10 @@ function formatDateTime(dateStr: string | null | undefined): string {
   overflow: hidden;
 }
 
-:root.dark .table-container {
-  background-color: #111827;
-  border-color: #1f2937;
-}
-
 /* Cell Styles */
 .cell-title {
   font-weight: 500;
   color: #111827;
-}
-
-:root.dark .cell-title {
-  color: white;
 }
 
 .cell-slug {
@@ -500,19 +466,10 @@ function formatDateTime(dateStr: string | null | undefined): string {
   border-radius: 4px;
 }
 
-:root.dark .cell-slug {
-  color: #9ca3af;
-  background-color: #1f2937;
-}
-
 .cell-date {
   font-size: 13px;
   color: #6b7280;
   white-space: nowrap;
-}
-
-:root.dark .cell-date {
-  color: #9ca3af;
 }
 
 /* Status Badge */
@@ -531,29 +488,14 @@ function formatDateTime(dateStr: string | null | undefined): string {
   color: #166534;
 }
 
-:root.dark .status-badge--published {
-  background-color: rgba(34, 197, 94, 0.15);
-  color: #4ade80;
-}
-
 .status-badge--draft {
   background-color: #fef3c7;
   color: #92400e;
 }
 
-:root.dark .status-badge--draft {
-  background-color: rgba(234, 179, 8, 0.15);
-  color: #facc15;
-}
-
 .status-badge--archived {
   background-color: #f3f4f6;
   color: #4b5563;
-}
-
-:root.dark .status-badge--archived {
-  background-color: rgba(107, 114, 128, 0.15);
-  color: #9ca3af;
 }
 
 /* Modal */
@@ -583,10 +525,6 @@ function formatDateTime(dateStr: string | null | undefined): string {
   background-color: #fee2e2;
 }
 
-:root.dark .modal-icon--danger {
-  background-color: rgba(239, 68, 68, 0.15);
-}
-
 .modal-title {
   font-size: 16px;
   font-weight: 600;
@@ -594,18 +532,10 @@ function formatDateTime(dateStr: string | null | undefined): string {
   margin: 0;
 }
 
-:root.dark .modal-title {
-  color: white;
-}
-
 .modal-text {
   font-size: 14px;
   color: #6b7280;
   margin: 4px 0 0 0;
-}
-
-:root.dark .modal-text {
-  color: #9ca3af;
 }
 
 .modal-actions {
@@ -640,8 +570,14 @@ function formatDateTime(dateStr: string | null | undefined): string {
 }
 
 .cms-btn__icon {
-  font-size: 18px;
-  font-weight: 400;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.modal-icon__svg {
+  width: 24px;
+  height: 24px;
 }
 
 /* Primary Button (Blue) */
@@ -666,17 +602,6 @@ function formatDateTime(dateStr: string | null | undefined): string {
 .cms-btn--outline:hover:not(:disabled) {
   background-color: #f3f4f6;
   border-color: #9ca3af;
-}
-
-:root.dark .cms-btn--outline {
-  background-color: #1f2937;
-  color: #d1d5db;
-  border-color: #4b5563;
-}
-
-:root.dark .cms-btn--outline:hover:not(:disabled) {
-  background-color: #374151;
-  border-color: #6b7280;
 }
 
 /* Danger Button (Red solid) */

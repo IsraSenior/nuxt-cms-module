@@ -11,6 +11,7 @@ interface Props {
   currentLocale?: string
   disabled?: boolean
   errors?: Record<string, string>
+  excludeFields?: string[]
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -19,7 +20,8 @@ const props = withDefaults(defineProps<Props>(), {
   locales: () => [],
   currentLocale: '',
   disabled: false,
-  errors: () => ({})
+  errors: () => ({}),
+  excludeFields: () => []
 })
 
 const emit = defineEmits<{
@@ -85,6 +87,7 @@ const fieldGroups = computed(() => {
 
   for (const [key, field] of Object.entries(props.fields)) {
     if (field.hidden) continue
+    if (props.excludeFields.includes(key)) continue
 
     const width = field.width || 'full'
     const widthValue = widthMap[width] || 12

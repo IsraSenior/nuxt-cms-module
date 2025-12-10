@@ -61,16 +61,16 @@ onBeforeUnmount(() => {
 })
 
 const toolbarButtons = [
-  { action: 'bold', icon: 'B', title: 'Bold' },
-  { action: 'italic', icon: 'I', title: 'Italic' },
-  { action: 'underline', icon: 'U', title: 'Underline' },
-  { action: 'strike', icon: 'S', title: 'Strikethrough' },
-  { action: 'heading-1', icon: 'H1', title: 'Heading 1' },
-  { action: 'heading-2', icon: 'H2', title: 'Heading 2' },
-  { action: 'bulletList', icon: '•', title: 'Bullet List' },
-  { action: 'orderedList', icon: '1.', title: 'Ordered List' },
-  { action: 'blockquote', icon: '"', title: 'Quote' },
-  { action: 'link', icon: '🔗', title: 'Link' }
+  { action: 'bold', icon: 'B', title: 'Bold', svg: false },
+  { action: 'italic', icon: 'I', title: 'Italic', svg: false },
+  { action: 'underline', icon: 'U', title: 'Underline', svg: false },
+  { action: 'strike', icon: 'S', title: 'Strikethrough', svg: false },
+  { action: 'heading-1', icon: 'H1', title: 'Heading 1', svg: false },
+  { action: 'heading-2', icon: 'H2', title: 'Heading 2', svg: false },
+  { action: 'bulletList', icon: '•', title: 'Bullet List', svg: false },
+  { action: 'orderedList', icon: '1.', title: 'Ordered List', svg: false },
+  { action: 'blockquote', icon: '"', title: 'Quote', svg: false },
+  { action: 'link', icon: 'link', title: 'Link', svg: true }
 ]
 
 function executeAction(action: string) {
@@ -133,12 +133,11 @@ function isActive(action: string): boolean {
 </script>
 
 <template>
-  <UFormField
-    :label="label"
-    :required="required"
-    :help="help"
-    :error="error"
-  >
+  <div class="cms-field">
+    <label v-if="label" class="cms-field__label">
+      {{ label }}
+      <span v-if="required" class="cms-field__required">*</span>
+    </label>
     <div class="richtext-editor">
       <!-- Toolbar -->
       <div class="richtext-editor__toolbar">
@@ -154,40 +153,70 @@ function isActive(action: string): boolean {
           :disabled="disabled"
           @click="executeAction(btn.action)"
         >
-          {{ btn.icon }}
+          <svg v-if="btn.svg && btn.icon === 'link'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="richtext-editor__icon">
+            <path d="M12.232 4.232a2.5 2.5 0 0 1 3.536 3.536l-1.225 1.224a.75.75 0 0 0 1.061 1.06l1.224-1.224a4 4 0 0 0-5.656-5.656l-3 3a4 4 0 0 0 .225 5.865.75.75 0 0 0 .977-1.138 2.5 2.5 0 0 1-.142-3.667l3-3Z" />
+            <path d="M11.603 7.963a.75.75 0 0 0-.977 1.138 2.5 2.5 0 0 1 .142 3.667l-3 3a2.5 2.5 0 0 1-3.536-3.536l1.225-1.224a.75.75 0 0 0-1.061-1.06l-1.224 1.224a4 4 0 1 0 5.656 5.656l3-3a4 4 0 0 0-.225-5.865Z" />
+          </svg>
+          <template v-else>{{ btn.icon }}</template>
         </button>
       </div>
 
       <!-- Editor -->
       <EditorContent
         :editor="editor"
-        class="richtext-editor__content"
         :class="[
-          { 'min-h-[200px]': !field.minHeight },
-          { 'opacity-50': disabled }
+          'richtext-editor__content',
+          { 'richtext-editor__content--disabled': disabled }
         ]"
         :style="{
-          minHeight: field.minHeight ? `${field.minHeight}px` : undefined,
+          minHeight: field.minHeight ? `${field.minHeight}px` : '200px',
           maxHeight: field.maxHeight ? `${field.maxHeight}px` : undefined,
           overflowY: field.maxHeight ? 'auto' : undefined
         }"
       />
     </div>
-  </UFormField>
+    <p v-if="help && !error" class="cms-field__help">{{ help }}</p>
+    <p v-if="error" class="cms-field__error">{{ error }}</p>
+  </div>
 </template>
 
 <style>
+/* CMS Field Wrapper */
+.cms-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cms-field__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.cms-field__required {
+  color: #dc2626;
+  margin-left: 2px;
+}
+
+.cms-field__help {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.cms-field__error {
+  font-size: 13px;
+  color: #dc2626;
+  margin: 0;
+}
+
 /* Richtext Editor */
 .richtext-editor {
   border: 1px solid #d1d5db;
   border-radius: 8px;
   overflow: hidden;
   background-color: white;
-}
-
-:root.dark .richtext-editor {
-  border-color: #374151;
-  background-color: #111827;
 }
 
 .richtext-editor__toolbar {
@@ -199,17 +228,20 @@ function isActive(action: string): boolean {
   border-bottom: 1px solid #e5e7eb;
 }
 
-:root.dark .richtext-editor__toolbar {
-  background-color: #1f2937;
-  border-bottom-color: #374151;
-}
-
 .richtext-editor__btn {
   padding: 4px 8px;
   font-size: 14px;
   border-radius: 4px;
   color: #374151;
   transition: background-color 0.15s ease, color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.richtext-editor__icon {
+  width: 16px;
+  height: 16px;
 }
 
 .richtext-editor__btn:hover {
@@ -221,21 +253,13 @@ function isActive(action: string): boolean {
   color: #2563eb;
 }
 
-:root.dark .richtext-editor__btn {
-  color: #d1d5db;
-}
-
-:root.dark .richtext-editor__btn:hover {
-  background-color: #374151;
-}
-
-:root.dark .richtext-editor__btn--active {
-  background-color: rgba(59, 130, 246, 0.2);
-  color: #60a5fa;
-}
-
 .richtext-editor__content {
   padding: 16px;
+}
+
+.richtext-editor__content--disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .richtext-editor__content .ProseMirror {
@@ -244,20 +268,12 @@ function isActive(action: string): boolean {
   color: #111827;
 }
 
-:root.dark .richtext-editor__content .ProseMirror {
-  color: #f3f4f6;
-}
-
 .ProseMirror p.is-editor-empty:first-child::before {
   color: #9ca3af;
   content: attr(data-placeholder);
   float: left;
   height: 0;
   pointer-events: none;
-}
-
-:root.dark .ProseMirror p.is-editor-empty:first-child::before {
-  color: #6b7280;
 }
 
 /* Prose styles */
@@ -290,8 +306,4 @@ function isActive(action: string): boolean {
   color: #6b7280;
 }
 
-:root.dark .richtext-editor__content .ProseMirror blockquote {
-  border-left-color: #4b5563;
-  color: #9ca3af;
-}
 </style>

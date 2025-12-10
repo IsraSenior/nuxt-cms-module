@@ -13,6 +13,9 @@ const config = useRuntimeConfig()
 // Fetch schema to get actual counts
 const { data: schema } = await useFetch('/api/cms/schema')
 
+// Fetch media to get count
+const { data: media } = await useFetch<{ data: unknown[], meta: { total: number } }>('/api/cms/media')
+
 const collectionsCount = computed(() => {
   return schema.value?.collections ? Object.keys(schema.value.collections).length : 0
 })
@@ -21,50 +24,10 @@ const singletonsCount = computed(() => {
   return schema.value?.singletons ? Object.keys(schema.value.singletons).length : 0
 })
 
-const stats = computed(() => [
-  {
-    label: 'Collections',
-    value: collectionsCount.value.toString(),
-    icon: 'i-heroicons-rectangle-stack',
-    color: 'blue',
-    to: `${config.public.cms.adminPath}/collections`
-  },
-  {
-    label: 'Singletons',
-    value: singletonsCount.value.toString(),
-    icon: 'i-heroicons-document-text',
-    color: 'emerald',
-    to: `${config.public.cms.adminPath}/singletons`
-  },
-  {
-    label: 'Media Files',
-    value: '0',
-    icon: 'i-heroicons-photo',
-    color: 'violet',
-    to: `${config.public.cms.adminPath}/media`
-  }
-])
+const mediaCount = computed(() => {
+  return media.value?.meta?.total || media.value?.data?.length || 0
+})
 
-const quickActions = [
-  {
-    label: 'Collections',
-    description: 'Manage your content collections',
-    icon: 'i-heroicons-rectangle-stack',
-    to: `${config.public.cms.adminPath}/collections`
-  },
-  {
-    label: 'Singletons',
-    description: 'Edit single-instance content',
-    icon: 'i-heroicons-document-text',
-    to: `${config.public.cms.adminPath}/singletons`
-  },
-  {
-    label: 'Media Library',
-    description: 'Upload and manage files',
-    icon: 'i-heroicons-photo',
-    to: `${config.public.cms.adminPath}/media`
-  }
-]
 </script>
 
 <template>
@@ -80,21 +43,52 @@ const quickActions = [
 
       <!-- Stats Grid -->
       <div class="dashboard__stats">
-        <NuxtLink
-          v-for="stat in stats"
-          :key="stat.label"
-          :to="stat.to"
-          class="stat-card"
-          :class="`stat-card--${stat.color}`"
-        >
-          <div class="stat-card__icon" :class="`stat-card__icon--${stat.color}`">
-            <UIcon :name="stat.icon" class="w-6 h-6" />
+        <!-- Collections -->
+        <NuxtLink :to="`${config.public.cms.adminPath}/collections`" class="stat-card">
+          <div class="stat-card__icon stat-card__icon--blue">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 6.878V6a2.25 2.25 0 0 1 2.25-2.25h7.5A2.25 2.25 0 0 1 18 6v.878m-12 0c.235-.083.487-.128.75-.128h10.5c.263 0 .515.045.75.128m-12 0A2.25 2.25 0 0 0 4.5 9v.878m13.5-3A2.25 2.25 0 0 1 19.5 9v.878m0 0a2.246 2.246 0 0 0-.75-.128H5.25c-.263 0-.515.045-.75.128m15 0A2.25 2.25 0 0 1 21 12v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6c0-.98.626-1.813 1.5-2.122" />
+            </svg>
           </div>
           <div class="stat-card__content">
-            <span class="stat-card__value">{{ stat.value }}</span>
-            <span class="stat-card__label">{{ stat.label }}</span>
+            <span class="stat-card__value">{{ collectionsCount }}</span>
+            <span class="stat-card__label">Collections</span>
           </div>
-          <UIcon name="i-heroicons-arrow-right" class="stat-card__arrow" />
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="stat-card__arrow">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+          </svg>
+        </NuxtLink>
+
+        <!-- Singletons -->
+        <NuxtLink :to="`${config.public.cms.adminPath}/singletons`" class="stat-card">
+          <div class="stat-card__icon stat-card__icon--emerald">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+            </svg>
+          </div>
+          <div class="stat-card__content">
+            <span class="stat-card__value">{{ singletonsCount }}</span>
+            <span class="stat-card__label">Singletons</span>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="stat-card__arrow">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+          </svg>
+        </NuxtLink>
+
+        <!-- Media Files -->
+        <NuxtLink :to="`${config.public.cms.adminPath}/media`" class="stat-card">
+          <div class="stat-card__icon stat-card__icon--violet">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+            </svg>
+          </div>
+          <div class="stat-card__content">
+            <span class="stat-card__value">{{ mediaCount }}</span>
+            <span class="stat-card__label">Media Files</span>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="stat-card__arrow">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+          </svg>
         </NuxtLink>
       </div>
 
@@ -102,20 +96,52 @@ const quickActions = [
       <div class="dashboard__section">
         <h2 class="dashboard__section-title">Quick Actions</h2>
         <div class="dashboard__actions">
-          <NuxtLink
-            v-for="action in quickActions"
-            :key="action.label"
-            :to="action.to"
-            class="action-card"
-          >
+          <!-- Collections -->
+          <NuxtLink :to="`${config.public.cms.adminPath}/collections`" class="action-card">
             <div class="action-card__icon">
-              <UIcon :name="action.icon" class="w-5 h-5" />
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 6.878V6a2.25 2.25 0 0 1 2.25-2.25h7.5A2.25 2.25 0 0 1 18 6v.878m-12 0c.235-.083.487-.128.75-.128h10.5c.263 0 .515.045.75.128m-12 0A2.25 2.25 0 0 0 4.5 9v.878m13.5-3A2.25 2.25 0 0 1 19.5 9v.878m0 0a2.246 2.246 0 0 0-.75-.128H5.25c-.263 0-.515.045-.75.128m15 0A2.25 2.25 0 0 1 21 12v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6c0-.98.626-1.813 1.5-2.122" />
+              </svg>
             </div>
             <div class="action-card__content">
-              <span class="action-card__title">{{ action.label }}</span>
-              <span class="action-card__description">{{ action.description }}</span>
+              <span class="action-card__title">Collections</span>
+              <span class="action-card__description">Manage your content collections</span>
             </div>
-            <UIcon name="i-heroicons-chevron-right" class="action-card__arrow" />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="action-card__arrow">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+          </NuxtLink>
+
+          <!-- Singletons -->
+          <NuxtLink :to="`${config.public.cms.adminPath}/singletons`" class="action-card">
+            <div class="action-card__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+              </svg>
+            </div>
+            <div class="action-card__content">
+              <span class="action-card__title">Singletons</span>
+              <span class="action-card__description">Edit single-instance content</span>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="action-card__arrow">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+          </NuxtLink>
+
+          <!-- Media Library -->
+          <NuxtLink :to="`${config.public.cms.adminPath}/media`" class="action-card">
+            <div class="action-card__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+              </svg>
+            </div>
+            <div class="action-card__content">
+              <span class="action-card__title">Media Library</span>
+              <span class="action-card__description">Upload and manage files</span>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="action-card__arrow">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
           </NuxtLink>
         </div>
       </div>
@@ -124,6 +150,12 @@ const quickActions = [
 </template>
 
 <style>
+/* Utility classes for SVG sizes */
+.w-5 { width: 20px; }
+.h-5 { height: 20px; }
+.w-6 { width: 24px; }
+.h-6 { height: 24px; }
+
 /* Dashboard */
 .dashboard {
   display: flex;
@@ -145,18 +177,10 @@ const quickActions = [
   letter-spacing: -0.02em;
 }
 
-:root.dark .dashboard__title {
-  color: white;
-}
-
 .dashboard__subtitle {
   font-size: 15px;
   color: #6b7280;
   margin-top: 4px;
-}
-
-:root.dark .dashboard__subtitle {
-  color: #9ca3af;
 }
 
 /* Stats Grid */
@@ -191,15 +215,6 @@ const quickActions = [
   transform: translateY(-2px);
 }
 
-:root.dark .stat-card {
-  background-color: #111827;
-  border-color: #1f2937;
-}
-
-:root.dark .stat-card:hover {
-  border-color: #374151;
-}
-
 .stat-card__icon {
   width: 48px;
   height: 48px;
@@ -225,21 +240,6 @@ const quickActions = [
   color: #7c3aed;
 }
 
-:root.dark .stat-card__icon--blue {
-  background-color: rgba(37, 99, 235, 0.15);
-  color: #60a5fa;
-}
-
-:root.dark .stat-card__icon--emerald {
-  background-color: rgba(5, 150, 105, 0.15);
-  color: #34d399;
-}
-
-:root.dark .stat-card__icon--violet {
-  background-color: rgba(124, 58, 237, 0.15);
-  color: #a78bfa;
-}
-
 .stat-card__content {
   flex: 1;
   display: flex;
@@ -254,18 +254,10 @@ const quickActions = [
   line-height: 1;
 }
 
-:root.dark .stat-card__value {
-  color: white;
-}
-
 .stat-card__label {
   font-size: 14px;
   color: #6b7280;
   margin-top: 4px;
-}
-
-:root.dark .stat-card__label {
-  color: #9ca3af;
 }
 
 .stat-card__arrow {
@@ -281,14 +273,6 @@ const quickActions = [
   transform: translateX(4px);
 }
 
-:root.dark .stat-card__arrow {
-  color: #4b5563;
-}
-
-:root.dark .stat-card:hover .stat-card__arrow {
-  color: #9ca3af;
-}
-
 /* Section */
 .dashboard__section {
   display: flex;
@@ -300,10 +284,6 @@ const quickActions = [
   font-size: 18px;
   font-weight: 600;
   color: #111827;
-}
-
-:root.dark .dashboard__section-title {
-  color: white;
 }
 
 /* Actions Grid */
@@ -337,16 +317,6 @@ const quickActions = [
   background-color: #fafafa;
 }
 
-:root.dark .action-card {
-  background-color: #111827;
-  border-color: #1f2937;
-}
-
-:root.dark .action-card:hover {
-  border-color: #2563eb;
-  background-color: #0f172a;
-}
-
 .action-card__icon {
   width: 40px;
   height: 40px;
@@ -363,16 +333,6 @@ const quickActions = [
 .action-card:hover .action-card__icon {
   background-color: #eff6ff;
   color: #2563eb;
-}
-
-:root.dark .action-card__icon {
-  background-color: #1f2937;
-  color: #9ca3af;
-}
-
-:root.dark .action-card:hover .action-card__icon {
-  background-color: rgba(37, 99, 235, 0.15);
-  color: #60a5fa;
 }
 
 .action-card__content {
@@ -393,22 +353,10 @@ const quickActions = [
   color: #2563eb;
 }
 
-:root.dark .action-card__title {
-  color: white;
-}
-
-:root.dark .action-card:hover .action-card__title {
-  color: #60a5fa;
-}
-
 .action-card__description {
   font-size: 13px;
   color: #6b7280;
   margin-top: 2px;
-}
-
-:root.dark .action-card__description {
-  color: #9ca3af;
 }
 
 .action-card__arrow {
@@ -424,11 +372,4 @@ const quickActions = [
   transform: translateX(4px);
 }
 
-:root.dark .action-card__arrow {
-  color: #4b5563;
-}
-
-:root.dark .action-card:hover .action-card__arrow {
-  color: #60a5fa;
-}
 </style>

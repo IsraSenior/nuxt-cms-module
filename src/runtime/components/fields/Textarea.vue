@@ -90,18 +90,4 @@ const rows = computed(() => props.field.rows || 4)
   box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
 }
 
-:root.dark .cms-field__textarea {
-  background-color: #1f2937;
-  border-color: #374151;
-  color: #f3f4f6;
-}
-
-:root.dark .cms-field__textarea:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-}
-
-:root.dark .cms-field__textarea--disabled {
-  background-color: #111827;
-}
 </style>
