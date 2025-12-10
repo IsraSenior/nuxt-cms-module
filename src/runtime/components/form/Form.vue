@@ -53,6 +53,46 @@ function isFieldTranslatable(field: any): boolean {
     ['text', 'textarea', 'richtext', 'markdown', 'code'].includes(field.type)
 }
 
+// Get list of translatable field keys
+const translatableFieldKeys = computed(() => {
+  return Object.entries(props.fields)
+    .filter(([key, field]) => {
+      if (field.hidden) return false
+      if (props.excludeFields.includes(key)) return false
+      return isFieldTranslatable(field)
+    })
+    .map(([key]) => key)
+})
+
+// Calculate translation progress for each locale
+const translationProgress = computed(() => {
+  if (!isMultilingual.value || translatableFieldKeys.value.length === 0) {
+    return {}
+  }
+
+  const progress: Record<string, { translated: number; total: number; percentage: number }> = {}
+
+  for (const locale of props.locales) {
+    const localeTranslations = props.translations[locale] || {}
+    let translated = 0
+
+    for (const key of translatableFieldKeys.value) {
+      const value = localeTranslations[key]
+      // Check if field has a non-empty value
+      if (value !== undefined && value !== null && value !== '') {
+        translated++
+      }
+    }
+
+    const total = translatableFieldKeys.value.length
+    const percentage = total > 0 ? Math.round((translated / total) * 100) : 0
+
+    progress[locale] = { translated, total, percentage }
+  }
+
+  return progress
+})
+
 function updateField(fieldKey: string, value: unknown) {
   const field = props.fields[fieldKey]
 
@@ -134,9 +174,10 @@ const fieldGroups = computed(() => {
           <path d="M7.75 2.75a.75.75 0 0 0-1.5 0v1.258a32.987 32.987 0 0 0-3.599.278.75.75 0 1 0 .198 1.487A31.545 31.545 0 0 1 8.7 5.545 19.381 19.381 0 0 1 7 9.56a19.418 19.418 0 0 1-1.002-2.05.75.75 0 0 0-1.384.577 20.935 20.935 0 0 0 1.492 2.91 19.613 19.613 0 0 1-3.828 4.154.75.75 0 1 0 .945 1.164A21.116 21.116 0 0 0 7 12.331c.095.132.192.262.29.391a.75.75 0 0 0 1.194-.91c-.204-.266-.4-.538-.59-.815a20.888 20.888 0 0 0 2.333-5.332c.31.031.618.068.924.108a.75.75 0 0 0 .198-1.487 32.832 32.832 0 0 0-3.599-.278V2.75Z" />
           <path fill-rule="evenodd" d="M13 8a.75.75 0 0 1 .671.415l4.25 8.5a.75.75 0 1 1-1.342.67L15.787 16h-5.573l-.793 1.585a.75.75 0 1 1-1.342-.67l4.25-8.5A.75.75 0 0 1 13 8Zm2.037 6.5L13 10.427 10.964 14.5h4.073Z" clip-rule="evenodd" />
         </svg>
-        <span class="cms-form__locale-title">Language</span>
-        <span class="cms-form__locale-active-label">{{ currentLocale.toUpperCase() }}</span>
+        <span class="cms-form__locale-title">Translations</span>
       </div>
+
+      <!-- Language buttons with progress -->
       <div class="cms-form__locale-switcher">
         <button
           v-for="locale in locales"
@@ -146,9 +187,61 @@ const fieldGroups = computed(() => {
           :class="{ 'cms-form__locale-btn--active': currentLocale === locale }"
           @click="$emit('update:currentLocale', locale)"
         >
-          {{ locale.toUpperCase() }}
+          <span class="cms-form__locale-btn-content">
+            <span class="cms-form__locale-btn-code">{{ locale.toUpperCase() }}</span>
+            <span
+              v-if="translationProgress[locale]"
+              class="cms-form__locale-btn-progress"
+              :class="{
+                'cms-form__locale-btn-progress--complete': translationProgress[locale].percentage === 100,
+                'cms-form__locale-btn-progress--partial': translationProgress[locale].percentage > 0 && translationProgress[locale].percentage < 100,
+                'cms-form__locale-btn-progress--empty': translationProgress[locale].percentage === 0
+              }"
+            >
+              {{ translationProgress[locale].percentage }}%
+            </span>
+          </span>
+          <!-- Progress bar -->
+          <span
+            v-if="translationProgress[locale]"
+            class="cms-form__locale-btn-bar"
+          >
+            <span
+              class="cms-form__locale-btn-bar-fill"
+              :class="{
+                'cms-form__locale-btn-bar-fill--complete': translationProgress[locale].percentage === 100,
+                'cms-form__locale-btn-bar-fill--partial': translationProgress[locale].percentage > 0 && translationProgress[locale].percentage < 100,
+                'cms-form__locale-btn-bar-fill--empty': translationProgress[locale].percentage === 0
+              }"
+              :style="{ width: `${translationProgress[locale].percentage}%` }"
+            ></span>
+          </span>
         </button>
       </div>
+
+      <!-- Current locale status -->
+      <div v-if="translationProgress[currentLocale]" class="cms-form__locale-status">
+        <span class="cms-form__locale-status-text">
+          <strong>{{ currentLocale.toUpperCase() }}</strong>:
+          {{ translationProgress[currentLocale].translated }}/{{ translationProgress[currentLocale].total }} fields translated
+        </span>
+        <span
+          v-if="translationProgress[currentLocale].percentage < 100"
+          class="cms-form__locale-status-remaining"
+        >
+          ({{ translationProgress[currentLocale].total - translationProgress[currentLocale].translated }} remaining)
+        </span>
+        <span
+          v-else
+          class="cms-form__locale-status-complete"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="cms-form__locale-status-icon">
+            <path fill-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
+          </svg>
+          Complete
+        </span>
+      </div>
+
       <p class="cms-form__locale-hint">
         Fields marked with <span class="cms-form__translatable-badge-inline"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path d="M6.2 2.2a.75.75 0 0 0-1.4.6l.7 1.6a22.3 22.3 0 0 0-2.4.2.75.75 0 1 0 .2 1.5h.1l.9-.1A13 13 0 0 1 3 9.5a13.2 13.2 0 0 1-.7-1.4.75.75 0 0 0-1.4.6c.3.7.6 1.4 1 2a13.2 13.2 0 0 1-2.6 2.8.75.75 0 1 0 1 1.1 14.5 14.5 0 0 0 2.8-3l.2.2a.75.75 0 0 0 1-.7l-.4-.6a14.2 14.2 0 0 0 1.6-3.6h.1a.75.75 0 0 0 .2-1.5 22.1 22.1 0 0 0-2.4-.2l-.7-1.6ZM11 6a.75.75 0 0 1 .7.4l2.8 5.7a.75.75 0 1 1-1.4.7l-.5-1h-3.7l-.5 1a.75.75 0 1 1-1.4-.7l2.9-5.7A.75.75 0 0 1 11 6Zm1.3 4.3L11 7.6l-1.3 2.7h2.6Z"/></svg></span> can be translated
       </p>
@@ -362,6 +455,133 @@ const fieldGroups = computed(() => {
 .cms-form__translatable-badge svg {
   width: 12px;
   height: 12px;
+}
+
+/* Locale Button Content Layout */
+.cms-form__locale-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  min-width: 80px;
+}
+
+.cms-form__locale-btn-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cms-form__locale-btn-code {
+  font-weight: 600;
+}
+
+.cms-form__locale-btn-progress {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.cms-form__locale-btn-progress--complete {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.cms-form__locale-btn-progress--partial {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.cms-form__locale-btn-progress--empty {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.cms-form__locale-btn--active .cms-form__locale-btn-progress--complete {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: white;
+}
+
+.cms-form__locale-btn--active .cms-form__locale-btn-progress--partial {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: white;
+}
+
+.cms-form__locale-btn--active .cms-form__locale-btn-progress--empty {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: white;
+}
+
+/* Progress Bar */
+.cms-form__locale-btn-bar {
+  height: 3px;
+  background-color: #e5e7eb;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.cms-form__locale-btn--active .cms-form__locale-btn-bar {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.cms-form__locale-btn-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.cms-form__locale-btn-bar-fill--complete {
+  background-color: #22c55e;
+}
+
+.cms-form__locale-btn-bar-fill--partial {
+  background-color: #f59e0b;
+}
+
+.cms-form__locale-btn-bar-fill--empty {
+  background-color: #ef4444;
+}
+
+.cms-form__locale-btn--active .cms-form__locale-btn-bar-fill {
+  background-color: white;
+}
+
+/* Locale Status */
+.cms-form__locale-status {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background-color: white;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cms-form__locale-status-text {
+  color: #4b5563;
+}
+
+.cms-form__locale-status-remaining {
+  color: #b45309;
+  font-size: 12px;
+}
+
+.cms-form__locale-status-complete {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #15803d;
+  font-weight: 500;
+}
+
+.cms-form__locale-status-icon {
+  width: 14px;
+  height: 14px;
 }
 
 /* Responsive: apply actual widths on larger screens */

@@ -40,6 +40,10 @@ const canRemove = computed(() => {
 
 const collapsedItems = ref<Set<number>>(new Set())
 
+// Drag and drop state
+const draggedIndex = ref<number | null>(null)
+const dragOverIndex = ref<number | null>(null)
+
 function addItem() {
   if (!canAddMore.value) return
 
@@ -97,6 +101,61 @@ function getItemLabel(item: Record<string, unknown>, index: number): string {
   return `Item ${index + 1}`
 }
 
+// Drag and drop handlers
+function handleDragStart(event: DragEvent, index: number) {
+  if (props.disabled || props.field.sortable === false) return
+
+  draggedIndex.value = index
+
+  // Set drag data
+  if (event.dataTransfer) {
+    event.dataTransfer.effectAllowed = 'move'
+    event.dataTransfer.setData('text/plain', String(index))
+  }
+}
+
+function handleDragOver(event: DragEvent, index: number) {
+  event.preventDefault()
+  if (draggedIndex.value === null || draggedIndex.value === index) return
+
+  dragOverIndex.value = index
+
+  if (event.dataTransfer) {
+    event.dataTransfer.dropEffect = 'move'
+  }
+}
+
+function handleDragLeave(event: DragEvent) {
+  // Only clear if leaving the item completely
+  const relatedTarget = event.relatedTarget as HTMLElement
+  const currentTarget = event.currentTarget as HTMLElement
+
+  if (!currentTarget.contains(relatedTarget)) {
+    dragOverIndex.value = null
+  }
+}
+
+function handleDrop(event: DragEvent, toIndex: number) {
+  event.preventDefault()
+
+  if (draggedIndex.value === null || draggedIndex.value === toIndex) {
+    resetDragState()
+    return
+  }
+
+  moveItem(draggedIndex.value, toIndex)
+  resetDragState()
+}
+
+function handleDragEnd() {
+  resetDragState()
+}
+
+function resetDragState() {
+  draggedIndex.value = null
+  dragOverIndex.value = null
+}
+
 // Field component mapping
 function getFieldComponent(type: string): string {
   const componentMap: Record<string, string> = {
@@ -142,6 +201,16 @@ function getFieldComponent(type: string): string {
         v-for="(item, index) in items"
         :key="index"
         class="cms-repeater__item"
+        :class="{
+          'cms-repeater__item--dragging': draggedIndex === index,
+          'cms-repeater__item--drag-over': dragOverIndex === index && draggedIndex !== index
+        }"
+        :draggable="field.sortable !== false && !disabled"
+        @dragstart="handleDragStart($event, index)"
+        @dragover="handleDragOver($event, index)"
+        @dragleave="handleDragLeave($event)"
+        @drop="handleDrop($event, index)"
+        @dragend="handleDragEnd"
       >
         <!-- Item header -->
         <div
@@ -152,6 +221,7 @@ function getFieldComponent(type: string): string {
           <span
             v-if="field.sortable !== false"
             class="cms-repeater__drag"
+            :class="{ 'cms-repeater__drag--active': !disabled }"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="cms-repeater__drag-icon">
               <path fill-rule="evenodd" d="M10 3a.75.75 0 0 1 .55.24l3.25 3.5a.75.75 0 1 1-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 0 1-1.1-1.02l3.25-3.5A.75.75 0 0 1 10 3Zm-3.76 9.24a.75.75 0 0 1 1.06.04l2.7 2.908 2.7-2.908a.75.75 0 1 1 1.1 1.02l-3.25 3.5a.75.75 0 0 1-1.1 0l-3.25-3.5a.75.75 0 0 1 .04-1.06Z" clip-rule="evenodd" />
@@ -296,6 +366,19 @@ function getFieldComponent(type: string): string {
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease, border-color 0.15s ease;
+}
+
+.cms-repeater__item--dragging {
+  opacity: 0.5;
+  transform: scale(0.98);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.cms-repeater__item--drag-over {
+  border-color: #3b82f6;
+  border-style: dashed;
+  background-color: #eff6ff;
 }
 
 .cms-repeater__header {
@@ -309,12 +392,29 @@ function getFieldComponent(type: string): string {
 
 .cms-repeater__drag {
   color: #9ca3af;
-  cursor: move;
+  cursor: default;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.cms-repeater__drag--active {
+  cursor: grab;
+}
+
+.cms-repeater__drag--active:hover {
+  color: #6b7280;
+  background-color: #e5e7eb;
+}
+
+.cms-repeater__drag--active:active {
+  cursor: grabbing;
 }
 
 .cms-repeater__drag-icon {
   width: 16px;
   height: 16px;
+  display: block;
 }
 
 .cms-repeater__toggle {
