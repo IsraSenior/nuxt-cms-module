@@ -186,6 +186,12 @@ const cmsModule: NuxtModule<CmsModuleOptions> = defineNuxtModule({
     // Add server plugin for database initialization
     addServerPlugin(resolver.resolve('./runtime/server/plugins/database'))
 
+    // Add security middleware for API routes
+    addServerHandler({
+      middleware: true,
+      handler: resolver.resolve('./runtime/server/middleware/security')
+    })
+
     // Add composables
     addImports([
       {
@@ -276,6 +282,18 @@ const cmsModule: NuxtModule<CmsModuleOptions> = defineNuxtModule({
       route: '/api/cms/auth/me',
       method: 'get',
       handler: resolver.resolve('./runtime/server/api/cms/auth/me.get')
+    })
+
+    addServerHandler({
+      route: '/api/cms/auth/password',
+      method: 'put',
+      handler: resolver.resolve('./runtime/server/api/cms/auth/password.put')
+    })
+
+    addServerHandler({
+      route: '/api/cms/auth/sessions',
+      method: 'delete',
+      handler: resolver.resolve('./runtime/server/api/cms/auth/sessions.delete')
     })
 
     addServerHandler({
