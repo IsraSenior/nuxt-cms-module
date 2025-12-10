@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useAsyncData } from '#imports'
 import type { RelationFieldDefinition } from '../../types'
 
 interface Props {
