@@ -30,6 +30,8 @@ export interface CollectionConfig {
   titleField?: string
   /** Field used for URL slugs */
   slugField?: string
+  /** Fields to display in list view (array of field names) */
+  listFields?: string[]
   /** Field definitions */
   fields: FieldsSchema
   /** Enable timestamps (created_at, updated_at) - default: true */
