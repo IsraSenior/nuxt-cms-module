@@ -156,8 +156,76 @@ export function sanitizeHtml(html: string): string {
       'blockquote', 'pre', 'code', 'img', 'hr', 'table', 'thead',
       'tbody', 'tr', 'th', 'td', 'span', 'div'
     ],
-    ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'target', 'rel', 'style']
+    ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'target', 'rel', 'style'],
+    // Prevent XSS through javascript: URLs
+    ALLOW_DATA_ATTR: false,
+    ADD_ATTR: ['target'],
+    FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover'],
+    FORBID_TAGS: ['script', 'object', 'embed', 'form', 'input']
   })
+}
+
+/**
+ * Sanitize plain text (remove HTML, prevent injection)
+ */
+export function sanitizeText(text: string): string {
+  if (typeof text !== 'string') return ''
+
+  // Remove HTML tags
+  const withoutHtml = DOMPurify.sanitize(text, { ALLOWED_TAGS: [] })
+
+  // Trim whitespace
+  return withoutHtml.trim()
+}
+
+/**
+ * Sanitize string for SQL-like patterns (prevent wildcards abuse)
+ */
+export function sanitizeSearchQuery(query: string): string {
+  if (typeof query !== 'string') return ''
+
+  // Remove special SQL characters that could be abused
+  return query
+    .replace(/[%_\\]/g, '')
+    .trim()
+    .slice(0, 100) // Limit length
+}
+
+/**
+ * Validate and sanitize URL
+ */
+export function sanitizeUrl(url: string): string | null {
+  if (typeof url !== 'string') return null
+
+  try {
+    const parsed = new URL(url)
+
+    // Only allow http, https protocols
+    if (!['http:', 'https:'].includes(parsed.protocol)) {
+      return null
+    }
+
+    return parsed.toString()
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Sanitize email address
+ */
+export function sanitizeEmail(email: string): string | null {
+  if (typeof email !== 'string') return null
+
+  const trimmed = email.trim().toLowerCase()
+
+  // Basic email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailRegex.test(trimmed)) {
+    return null
+  }
+
+  return trimmed
 }
 
 /**
