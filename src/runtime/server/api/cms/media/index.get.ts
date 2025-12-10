@@ -2,6 +2,7 @@ import { defineEventHandler, getQuery } from '#imports'
 import { desc, asc, like, sql } from 'drizzle-orm'
 import { requireAuth } from '../../../utils/auth'
 import { useCmsDatabase, mediaSqlite, mediaPostgres, getDatabaseType } from '../../../database/client'
+import { sanitizeSearchQuery } from '../../../utils/validation'
 
 export default defineEventHandler(async (event) => {
   await requireAuth(event)
@@ -10,7 +11,9 @@ export default defineEventHandler(async (event) => {
   const page = Number(query.page) || 1
   const perPage = Math.min(Number(query.perPage) || 20, 100)
   const type = query.type as string | undefined
-  const search = query.search as string | undefined
+  // Sanitize search query to prevent SQL wildcard abuse
+  const rawSearch = query.search as string | undefined
+  const search = rawSearch ? sanitizeSearchQuery(rawSearch) : undefined
   const orderBy = (query.orderBy as 'createdAt' | 'filename' | 'size') || 'createdAt'
   const orderDir = (query.orderDir as 'asc' | 'desc') || 'desc'
 

@@ -2,9 +2,10 @@ import { defineEventHandler, useRuntimeConfig, readMultipartFormData, createErro
 import { nanoid } from 'nanoid'
 import { writeFile, mkdir } from 'fs/promises'
 import { existsSync } from 'fs'
-import { join, extname } from 'path'
+import { join, extname, basename } from 'path'
 import { requireAuth } from '../../../utils/auth'
 import { useCmsDatabase, mediaSqlite, mediaPostgres, getDatabaseType } from '../../../database/client'
+import { sanitizeText } from '../../../utils/validation'
 
 export default defineEventHandler(async (event) => {
   const user = await requireAuth(event)
@@ -31,9 +32,13 @@ export default defineEventHandler(async (event) => {
   }
 
   const mimeType = fileData.type || 'application/octet-stream'
-  const originalName = fileData.filename || 'file'
+  // Sanitize filename: remove path components to prevent directory traversal
+  const rawFilename = fileData.filename || 'file'
+  const originalName = basename(rawFilename).replace(/[^a-zA-Z0-9._-]/g, '_')
   const size = fileData.data.length
-  const alt = altData?.data?.toString() || null
+  // Sanitize alt text to prevent XSS
+  const rawAlt = altData?.data?.toString()
+  const alt = rawAlt ? sanitizeText(rawAlt) : null
 
   // Validate mime type
   const allowedTypes = config.cms.uploads.allowedTypes
