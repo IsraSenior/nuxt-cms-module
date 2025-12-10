@@ -121,6 +121,7 @@ function handleCancel() {
           v-model:translations="translations"
           v-model:current-locale="currentLocale"
           :locales="locales"
+          :default-locale="defaultLocale"
           :errors="errors"
           :disabled="saving"
           @submit="handleSubmit"

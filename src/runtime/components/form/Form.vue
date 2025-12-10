@@ -9,6 +9,7 @@ interface Props {
   translations?: Record<string, Record<string, unknown>>
   locales?: string[]
   currentLocale?: string
+  defaultLocale?: string
   disabled?: boolean
   errors?: Record<string, string>
   excludeFields?: string[]
@@ -19,6 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
   translations: () => ({}),
   locales: () => [],
   currentLocale: '',
+  defaultLocale: '',
   disabled: false,
   errors: () => ({}),
   excludeFields: () => []
@@ -71,15 +73,27 @@ const translationProgress = computed(() => {
   }
 
   const progress: Record<string, { translated: number; total: number; percentage: number }> = {}
+  // Use the first locale as default if defaultLocale is not specified
+  const effectiveDefaultLocale = props.defaultLocale || props.locales[0] || ''
 
   for (const locale of props.locales) {
-    const localeTranslations = props.translations[locale] || {}
     let translated = 0
 
     for (const key of translatableFieldKeys.value) {
-      const value = localeTranslations[key]
-      // Check if field has a non-empty value
-      if (value !== undefined && value !== null && value !== '') {
+      let hasValue = false
+
+      if (locale === effectiveDefaultLocale) {
+        // For the default locale, check the base modelValue
+        const baseValue = props.modelValue[key]
+        hasValue = baseValue !== undefined && baseValue !== null && baseValue !== ''
+      } else {
+        // For other locales, check translations[locale]
+        const localeTranslations = props.translations[locale] || {}
+        const translatedValue = localeTranslations[key]
+        hasValue = translatedValue !== undefined && translatedValue !== null && translatedValue !== ''
+      }
+
+      if (hasValue) {
         translated++
       }
     }
