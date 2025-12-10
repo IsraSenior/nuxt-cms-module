@@ -112,21 +112,22 @@ function handleCancel() {
         >
           <template #actions>
             <div class="form-actions">
-              <UButton
-                color="neutral"
-                variant="outline"
+              <button
+                type="button"
+                class="cms-btn cms-btn--outline"
                 :disabled="saving"
                 @click="handleCancel"
               >
                 Cancel
-              </UButton>
-              <UButton
+              </button>
+              <button
                 type="submit"
-                color="primary"
-                :loading="saving"
+                class="cms-btn cms-btn--primary"
+                :disabled="saving"
               >
+                <span v-if="saving" class="cms-btn__spinner"></span>
                 Create
-              </UButton>
+              </button>
             </div>
           </template>
         </CmsForm>
@@ -231,5 +232,77 @@ function handleCancel() {
 
 :root.dark .form-actions {
   border-top-color: #1f2937;
+}
+
+/* CMS Button Styles */
+.cms-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  border: 1px solid transparent;
+}
+
+.cms-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cms-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.cms-btn__spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Primary Button (Blue) */
+.cms-btn--primary {
+  background-color: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+.cms-btn--primary:hover:not(:disabled) {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+/* Outline Button */
+.cms-btn--outline {
+  background-color: transparent;
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+.cms-btn--outline:hover:not(:disabled) {
+  background-color: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+:root.dark .cms-btn--outline {
+  color: #d1d5db;
+  border-color: #4b5563;
+}
+
+:root.dark .cms-btn--outline:hover:not(:disabled) {
+  background-color: #374151;
+  border-color: #6b7280;
 }
 </style>

@@ -91,13 +91,13 @@ async function handleDelete() {
           </p>
         </div>
 
-        <UButton
-          color="primary"
-          icon="i-heroicons-plus"
+        <NuxtLink
           :to="`${config.public.cms.adminPath}/collections/${collectionName}/new`"
+          class="cms-btn cms-btn--primary"
         >
+          <UIcon name="i-heroicons-plus" class="cms-btn__icon" />
           New {{ collectionConfig.label }}
-        </UButton>
+        </NuxtLink>
       </div>
 
       <!-- Loading state -->
@@ -114,14 +114,13 @@ async function handleDelete() {
         <p class="empty-state__text">
           Create your first {{ collectionConfig.label?.toLowerCase() }}
         </p>
-        <UButton
-          color="primary"
-          icon="i-heroicons-plus"
+        <NuxtLink
           :to="`${config.public.cms.adminPath}/collections/${collectionName}/new`"
-          class="empty-state__button"
+          class="cms-btn cms-btn--primary"
         >
+          <UIcon name="i-heroicons-plus" class="cms-btn__icon" />
           Create {{ collectionConfig.label }}
-        </UButton>
+        </NuxtLink>
       </div>
 
       <!-- Table -->
@@ -170,12 +169,12 @@ async function handleDelete() {
               </div>
             </div>
             <div class="modal-actions">
-              <UButton color="neutral" variant="outline" @click="showDeleteModal = false">
+              <button type="button" class="cms-btn cms-btn--outline" @click="showDeleteModal = false">
                 Cancel
-              </UButton>
-              <UButton color="error" @click="handleDelete">
+              </button>
+              <button type="button" class="cms-btn cms-btn--danger" @click="handleDelete">
                 Delete
-              </UButton>
+              </button>
             </div>
           </div>
         </template>
@@ -463,5 +462,81 @@ async function handleDelete() {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+}
+
+/* CMS Button Styles */
+.cms-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  border: 1px solid transparent;
+  text-decoration: none;
+}
+
+.cms-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cms-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.cms-btn__icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Primary Button (Blue) */
+.cms-btn--primary {
+  background-color: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+.cms-btn--primary:hover:not(:disabled) {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+/* Outline Button */
+.cms-btn--outline {
+  background-color: transparent;
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+.cms-btn--outline:hover:not(:disabled) {
+  background-color: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+:root.dark .cms-btn--outline {
+  color: #d1d5db;
+  border-color: #4b5563;
+}
+
+:root.dark .cms-btn--outline:hover:not(:disabled) {
+  background-color: #374151;
+  border-color: #6b7280;
+}
+
+/* Danger Button (Red solid) */
+.cms-btn--danger {
+  background-color: #dc2626;
+  color: white;
+  border-color: #dc2626;
+}
+
+.cms-btn--danger:hover:not(:disabled) {
+  background-color: #b91c1c;
+  border-color: #b91c1c;
 }
 </style>

@@ -139,42 +139,43 @@ const statusOptions = [
         >
           <template #actions>
             <div class="form-actions form-actions--split">
-              <UButton
-                color="error"
-                variant="ghost"
-                icon="i-heroicons-trash"
+              <button
+                type="button"
+                class="cms-btn cms-btn--danger-ghost"
                 :disabled="saving"
                 @click="showDeleteModal = true"
               >
+                <UIcon name="i-heroicons-trash" class="cms-btn__icon" />
                 Delete
-              </UButton>
+              </button>
 
               <div class="form-actions__right">
-                <UButton
-                  color="neutral"
-                  variant="outline"
+                <button
+                  type="button"
+                  class="cms-btn cms-btn--outline"
                   :disabled="saving"
                   @click="handleCancel"
                 >
                   Cancel
-                </UButton>
-                <UButton
+                </button>
+                <button
                   type="submit"
-                  color="neutral"
-                  variant="solid"
-                  :loading="saving"
+                  class="cms-btn cms-btn--secondary"
+                  :disabled="saving"
                 >
+                  <span v-if="saving" class="cms-btn__spinner"></span>
                   Save Draft
-                </UButton>
-                <UButton
+                </button>
+                <button
                   v-if="currentStatus !== 'published'"
-                  color="primary"
-                  icon="i-heroicons-check"
-                  :loading="saving"
+                  type="button"
+                  class="cms-btn cms-btn--primary"
+                  :disabled="saving"
                   @click="handlePublish"
                 >
+                  <UIcon name="i-heroicons-check" class="cms-btn__icon" />
                   Publish
-                </UButton>
+                </button>
               </div>
             </div>
           </template>
@@ -195,12 +196,12 @@ const statusOptions = [
               </div>
             </div>
             <div class="modal-actions">
-              <UButton color="neutral" variant="outline" @click="showDeleteModal = false">
+              <button type="button" class="cms-btn cms-btn--outline" @click="showDeleteModal = false">
                 Cancel
-              </UButton>
-              <UButton color="error" @click="handleDelete">
+              </button>
+              <button type="button" class="cms-btn cms-btn--danger" @click="handleDelete">
                 Delete
-              </UButton>
+              </button>
             </div>
           </div>
         </template>
@@ -423,5 +424,130 @@ const statusOptions = [
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+}
+
+/* CMS Button Styles */
+.cms-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  border: 1px solid transparent;
+}
+
+.cms-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cms-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.cms-btn__icon {
+  width: 16px;
+  height: 16px;
+}
+
+.cms-btn__spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Primary Button (Blue) */
+.cms-btn--primary {
+  background-color: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+.cms-btn--primary:hover:not(:disabled) {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+/* Secondary Button (Gray solid) */
+.cms-btn--secondary {
+  background-color: #374151;
+  color: white;
+  border-color: #374151;
+}
+
+.cms-btn--secondary:hover:not(:disabled) {
+  background-color: #1f2937;
+  border-color: #1f2937;
+}
+
+:root.dark .cms-btn--secondary {
+  background-color: #4b5563;
+  border-color: #4b5563;
+}
+
+:root.dark .cms-btn--secondary:hover:not(:disabled) {
+  background-color: #6b7280;
+  border-color: #6b7280;
+}
+
+/* Outline Button */
+.cms-btn--outline {
+  background-color: transparent;
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+.cms-btn--outline:hover:not(:disabled) {
+  background-color: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+:root.dark .cms-btn--outline {
+  color: #d1d5db;
+  border-color: #4b5563;
+}
+
+:root.dark .cms-btn--outline:hover:not(:disabled) {
+  background-color: #374151;
+  border-color: #6b7280;
+}
+
+/* Danger Button (Red solid) */
+.cms-btn--danger {
+  background-color: #dc2626;
+  color: white;
+  border-color: #dc2626;
+}
+
+.cms-btn--danger:hover:not(:disabled) {
+  background-color: #b91c1c;
+  border-color: #b91c1c;
+}
+
+/* Danger Ghost Button */
+.cms-btn--danger-ghost {
+  background-color: transparent;
+  color: #dc2626;
+  border-color: transparent;
+}
+
+.cms-btn--danger-ghost:hover:not(:disabled) {
+  background-color: #fef2f2;
+}
+
+:root.dark .cms-btn--danger-ghost {
+  color: #f87171;
+}
+
+:root.dark .cms-btn--danger-ghost:hover:not(:disabled) {
+  background-color: rgba(239, 68, 68, 0.1);
 }
 </style>
