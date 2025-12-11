@@ -110,70 +110,74 @@ function handleCancel() {
         :status="currentStatus as 'draft' | 'published' | 'archived'"
       >
         <template #actions>
-          <!-- Publish Date input (if field exists) -->
-          <div v-if="collectionConfig.fields?.publishedAt" class="cms-form-page__date-field">
-            <label class="cms-form-page__date-label">Publish Date</label>
-            <input
-              type="datetime-local"
-              class="cms-form-page__date-input"
-              :value="formData.publishedAt ? new Date(formData.publishedAt as string).toISOString().slice(0, 16) : ''"
-              @input="formData.publishedAt = ($event.target as HTMLInputElement).value ? new Date(($event.target as HTMLInputElement).value).toISOString() : null"
+          <!-- Action Buttons Group -->
+          <div class="cms-actions">
+            <!-- Delete Button (icon only) -->
+            <button
+              type="button"
+              class="cms-actions__btn cms-actions__btn--danger"
               :disabled="saving"
-            />
-          </div>
+              @click="showDeleteModal = true"
+              title="Delete"
+            >
+              <UIcon name="i-heroicons-trash" class="cms-actions__icon" />
+              <span class="cms-actions__tooltip">Delete</span>
+            </button>
 
-          <button
-            type="button"
-            class="cms-btn cms-btn--danger-outline"
-            :disabled="saving"
-            @click="showDeleteModal = true"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="cms-btn__icon">
-              <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 1 0 .23 1.482l.149-.022.841 10.518A2.75 2.75 0 0 0 7.596 19h4.807a2.75 2.75 0 0 0 2.742-2.53l.841-10.519.149.023a.75.75 0 0 0 .23-1.482A41.03 41.03 0 0 0 14 4.193V3.75A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4ZM8.58 7.72a.75.75 0 0 0-1.5.06l.3 7.5a.75.75 0 1 0 1.5-.06l-.3-7.5Zm4.34.06a.75.75 0 1 0-1.5-.06l-.3 7.5a.75.75 0 1 0 1.5.06l.3-7.5Z" clip-rule="evenodd" />
-            </svg>
-            Delete
-          </button>
-          <button
-            type="button"
-            class="cms-btn cms-btn--outline"
-            :disabled="saving"
-            @click="handleCancel"
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            class="cms-btn cms-btn--secondary"
-            :disabled="saving"
-            @click="handleSubmit"
-          >
-            <span v-if="saving" class="cms-btn__spinner"></span>
-            Save Draft
-          </button>
-          <button
-            v-if="currentStatus !== 'published'"
-            type="button"
-            class="cms-btn cms-btn--primary"
-            :disabled="saving"
-            @click="handlePublish"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="cms-btn__icon">
-              <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-            </svg>
-            Publish
-          </button>
-          <button
-            v-else
-            type="button"
-            class="cms-btn cms-btn--warning"
-            :disabled="saving"
-            @click="handleUnpublish"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="cms-btn__icon">
-              <path fill-rule="evenodd" d="M7.793 2.232a.75.75 0 0 1-.025 1.06L3.622 7.25h10.003a5.375 5.375 0 0 1 0 10.75H10.75a.75.75 0 0 1 0-1.5h2.875a3.875 3.875 0 0 0 0-7.75H3.622l4.146 3.957a.75.75 0 0 1-1.036 1.085l-5.5-5.25a.75.75 0 0 1 0-1.085l5.5-5.25a.75.75 0 0 1 1.06.025Z" clip-rule="evenodd" />
-            </svg>
-            Unpublish
-          </button>
+            <!-- Separator -->
+            <div class="cms-actions__separator"></div>
+
+            <!-- Cancel Button -->
+            <button
+              type="button"
+              class="cms-actions__btn cms-actions__btn--ghost"
+              :disabled="saving"
+              @click="handleCancel"
+              title="Cancel"
+            >
+              <UIcon name="i-heroicons-x-mark" class="cms-actions__icon" />
+              <span class="cms-actions__tooltip">Cancel</span>
+            </button>
+
+            <!-- Save Draft Button -->
+            <button
+              type="button"
+              class="cms-actions__btn cms-actions__btn--secondary"
+              :disabled="saving"
+              @click="handleSubmit"
+              title="Save as draft"
+            >
+              <span v-if="saving" class="cms-actions__spinner"></span>
+              <UIcon v-else name="i-heroicons-document" class="cms-actions__icon" />
+              <span class="cms-actions__tooltip">Save Draft</span>
+            </button>
+
+            <!-- Publish / Unpublish Button -->
+            <button
+              v-if="currentStatus !== 'published'"
+              type="button"
+              class="cms-actions__btn cms-actions__btn--primary"
+              :disabled="saving"
+              @click="handlePublish"
+              title="Publish"
+            >
+              <UIcon name="i-heroicons-globe-alt" class="cms-actions__icon" />
+              <span class="cms-actions__label">Publish</span>
+              <span class="cms-actions__tooltip">Make public</span>
+            </button>
+            <button
+              v-else
+              type="button"
+              class="cms-actions__btn cms-actions__btn--warning"
+              :disabled="saving"
+              @click="handleUnpublish"
+              title="Unpublish"
+            >
+              <UIcon name="i-heroicons-eye-slash" class="cms-actions__icon" />
+              <span class="cms-actions__label">Unpublish</span>
+              <span class="cms-actions__tooltip">Return to draft</span>
+            </button>
+          </div>
         </template>
       </CmsPageHeader>
 
@@ -214,35 +218,161 @@ function handleCancel() {
   gap: 24px;
 }
 
-/* Date field in header */
-.cms-form-page__date-field {
+/* Actions Bar */
+.cms-actions {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-right: 8px;
+  align-items: center;
+  gap: 6px;
 }
 
-.cms-form-page__date-label {
-  font-size: 11px;
-  font-weight: 500;
-  color: #6b7280;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+.cms-actions__separator {
+  width: 1px;
+  height: 24px;
+  background-color: #e5e7eb;
+  margin: 0 6px;
 }
 
-.cms-form-page__date-input {
-  padding: 6px 10px;
+.cms-actions__btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
   font-size: 13px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  background-color: white;
-  color: #111827;
-  min-width: 180px;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
 }
 
-.cms-form-page__date-input:focus {
-  outline: none;
+.cms-actions__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cms-actions__icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.cms-actions__label {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .cms-actions__label {
+    display: inline;
+  }
+}
+
+/* Tooltip */
+.cms-actions__tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+  background-color: #1f2937;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.15s ease;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.cms-actions__tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #1f2937;
+}
+
+.cms-actions__btn:hover .cms-actions__tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Ghost Button (Cancel) */
+.cms-actions__btn--ghost {
+  background-color: transparent;
+  color: #6b7280;
+}
+
+.cms-actions__btn--ghost:hover:not(:disabled) {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+/* Secondary Button (Save Draft) */
+.cms-actions__btn--secondary {
+  background-color: #f3f4f6;
+  color: #374151;
+  border-color: #e5e7eb;
+}
+
+.cms-actions__btn--secondary:hover:not(:disabled) {
+  background-color: #e5e7eb;
+  border-color: #d1d5db;
+}
+
+/* Primary Button (Publish) */
+.cms-actions__btn--primary {
+  background-color: var(--cms-primary, #2563eb);
+  color: white;
   border-color: var(--cms-primary, #2563eb);
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+.cms-actions__btn--primary:hover:not(:disabled) {
+  background-color: var(--cms-primary-hover, #1d4ed8);
+  border-color: var(--cms-primary-hover, #1d4ed8);
+}
+
+/* Warning Button (Unpublish) */
+.cms-actions__btn--warning {
+  background-color: #f59e0b;
+  color: white;
+  border-color: #f59e0b;
+}
+
+.cms-actions__btn--warning:hover:not(:disabled) {
+  background-color: #d97706;
+  border-color: #d97706;
+}
+
+/* Danger Button (Delete) */
+.cms-actions__btn--danger {
+  background-color: transparent;
+  color: #dc2626;
+}
+
+.cms-actions__btn--danger:hover:not(:disabled) {
+  background-color: #fef2f2;
+}
+
+/* Spinner */
+.cms-actions__spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: cms-actions-spin 0.6s linear infinite;
+}
+
+@keyframes cms-actions-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 </style>
