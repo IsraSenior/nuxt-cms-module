@@ -10,7 +10,11 @@ export const usersSqlite = sqliteTable('cms_users', {
   passwordHash: text('password_hash').notNull(),
   email: text('email'),
   name: text('name'),
-  role: text('role', { enum: ['admin', 'editor'] }).default('editor').notNull(),
+  avatar: text('avatar'),
+  // Legacy role field for backwards compatibility during migration
+  role: text('role', { enum: ['admin', 'editor'] }).default('editor'),
+  // New role system - references cms_roles.id
+  roleId: text('role_id'),
   active: integer('active', { mode: 'boolean' }).default(true).notNull(),
   lastLogin: integer('last_login', { mode: 'timestamp' }),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
@@ -26,7 +30,11 @@ export const usersPostgres = pgTable('cms_users', {
   passwordHash: varchar('password_hash', { length: 255 }).notNull(),
   email: varchar('email', { length: 255 }),
   name: varchar('name', { length: 255 }),
-  role: varchar('role', { length: 20 }).default('editor').notNull(),
+  avatar: varchar('avatar', { length: 500 }),
+  // Legacy role field for backwards compatibility during migration
+  role: varchar('role', { length: 20 }).default('editor'),
+  // New role system - references cms_roles.id
+  roleId: varchar('role_id', { length: 21 }),
   active: boolean('active').default(true).notNull(),
   lastLogin: timestamp('last_login'),
   createdAt: timestamp('created_at').notNull().defaultNow(),

@@ -1,6 +1,7 @@
 import { defineEventHandler, getRouterParam, readBody, createError } from '#imports'
 import { nanoid } from 'nanoid'
 import { requireAuth } from '../../../../utils/auth'
+import { requirePermission } from '../../../../utils/permissions'
 import { processContentData } from '../../../../utils/validation'
 import { useCmsDatabase, contentSqlite, contentPostgres, translationsSqlite, translationsPostgres, getDatabaseType } from '../../../../database/client'
 
@@ -14,6 +15,9 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Collection name is required'
     })
   }
+
+  // Check create permission for this collection
+  await requirePermission(user, 'collections', 'create', name)
 
   const body = await readBody(event)
   const { data, translations, status = 'draft' } = body

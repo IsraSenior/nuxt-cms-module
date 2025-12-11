@@ -4,11 +4,16 @@ import { writeFile, mkdir } from 'fs/promises'
 import { existsSync } from 'fs'
 import { join, extname, basename } from 'path'
 import { requireAuth } from '../../../utils/auth'
+import { requirePermission } from '../../../utils/permissions'
 import { useCmsDatabase, mediaSqlite, mediaPostgres, getDatabaseType } from '../../../database/client'
 import { sanitizeText } from '../../../utils/validation'
 
 export default defineEventHandler(async (event) => {
   const user = await requireAuth(event)
+
+  // Check create permission for media
+  await requirePermission(user, 'media', 'create')
+
   const config = useRuntimeConfig()
 
   // Get multipart form data

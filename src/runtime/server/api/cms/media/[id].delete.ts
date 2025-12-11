@@ -4,10 +4,15 @@ import { unlink } from 'fs/promises'
 import { existsSync } from 'fs'
 import { join } from 'path'
 import { requireAuth } from '../../../utils/auth'
+import { requirePermission } from '../../../utils/permissions'
 import { useCmsDatabase, mediaSqlite, mediaPostgres, getDatabaseType } from '../../../database/client'
 
 export default defineEventHandler(async (event) => {
-  await requireAuth(event)
+  const user = await requireAuth(event)
+
+  // Check delete permission for media
+  await requirePermission(user, 'media', 'delete')
+
   const config = useRuntimeConfig()
 
   const id = getRouterParam(event, 'id')

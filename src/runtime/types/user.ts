@@ -1,5 +1,5 @@
 /**
- * User role
+ * User role (legacy)
  */
 export type UserRole = 'admin' | 'editor'
 
@@ -17,8 +17,12 @@ export interface CmsUser {
   email: string | null
   /** Display name */
   name: string | null
-  /** User role */
-  role: UserRole
+  /** Avatar URL */
+  avatar: string | null
+  /** User role (legacy - for backwards compatibility) */
+  role: UserRole | null
+  /** Role ID (new RBAC system) */
+  roleId: string | null
   /** Whether user is active */
   active: boolean
   /** Last login timestamp */
@@ -37,7 +41,13 @@ export interface SafeCmsUser {
   username: string
   email: string | null
   name: string | null
-  role: UserRole
+  avatar: string | null
+  /** Legacy role field */
+  role: UserRole | null
+  /** New role ID (RBAC) */
+  roleId: string | null
+  /** Role name (resolved from roleId) */
+  roleName?: string
   active: boolean
   lastLogin: Date | null
   createdAt: Date
@@ -59,8 +69,10 @@ export interface JwtPayload {
   sub: string
   /** Username */
   username: string
-  /** User role */
-  role: UserRole
+  /** User role (legacy) */
+  role: UserRole | null
+  /** Role ID (RBAC) */
+  roleId: string | null
   /** Issued at */
   iat: number
   /** Expiration */
@@ -79,13 +91,16 @@ export interface AuthSession {
 /**
  * Convert full user to safe user (without password)
  */
-export function toSafeUser(user: CmsUser): SafeCmsUser {
+export function toSafeUser(user: CmsUser, roleName?: string): SafeCmsUser {
   return {
     id: user.id,
     username: user.username,
     email: user.email,
     name: user.name,
+    avatar: user.avatar,
     role: user.role,
+    roleId: user.roleId,
+    roleName,
     active: user.active,
     lastLogin: user.lastLogin,
     createdAt: user.createdAt

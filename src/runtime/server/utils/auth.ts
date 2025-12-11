@@ -158,7 +158,9 @@ export async function getUserFromEvent(event: any): Promise<SafeCmsUser | null> 
     username: user.username,
     email: user.email,
     name: user.name,
-    role: user.role as UserRole,
+    avatar: user.avatar || null,
+    role: user.role as UserRole | null,
+    roleId: user.roleId || null,
     active: user.active,
     lastLogin: user.lastLogin,
     createdAt: user.createdAt
@@ -261,11 +263,12 @@ export async function loginUser(username: string, password: string): Promise<{ u
     .set({ lastLogin: new Date() })
     .where(eq(usersTable.id, user.id))
 
-  // Create token
+  // Create token with roleId
   const token = await createToken({
     sub: user.id,
     username: user.username,
-    role: user.role as UserRole
+    role: user.role as UserRole | null,
+    roleId: user.roleId || null
   })
 
   return {
@@ -274,7 +277,9 @@ export async function loginUser(username: string, password: string): Promise<{ u
       username: user.username,
       email: user.email,
       name: user.name,
-      role: user.role as UserRole,
+      avatar: user.avatar || null,
+      role: user.role as UserRole | null,
+      roleId: user.roleId || null,
       active: user.active,
       lastLogin: new Date(),
       createdAt: user.createdAt

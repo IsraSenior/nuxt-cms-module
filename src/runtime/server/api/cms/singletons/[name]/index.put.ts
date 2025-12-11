@@ -2,6 +2,7 @@ import { defineEventHandler, getRouterParam, readBody, createError } from '#impo
 import { eq, and } from 'drizzle-orm'
 import { nanoid } from 'nanoid'
 import { requireAuth } from '../../../../utils/auth'
+import { requirePermission } from '../../../../utils/permissions'
 import { processContentData } from '../../../../utils/validation'
 import { useCmsDatabase, contentSqlite, contentPostgres, translationsSqlite, translationsPostgres, getDatabaseType } from '../../../../database/client'
 
@@ -15,6 +16,9 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Singleton name is required'
     })
   }
+
+  // Check update permission for this singleton
+  await requirePermission(user, 'singletons', 'update', name)
 
   const body = await readBody(event)
   const { data, translations } = body

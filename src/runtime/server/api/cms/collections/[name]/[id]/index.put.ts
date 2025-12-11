@@ -2,11 +2,12 @@ import { defineEventHandler, getRouterParam, readBody, createError } from '#impo
 import { eq, and } from 'drizzle-orm'
 import { nanoid } from 'nanoid'
 import { requireAuth } from '../../../../../utils/auth'
+import { requirePermission } from '../../../../../utils/permissions'
 import { processContentData } from '../../../../../utils/validation'
 import { useCmsDatabase, contentSqlite, contentPostgres, translationsSqlite, translationsPostgres, getDatabaseType } from '../../../../../database/client'
 
 export default defineEventHandler(async (event) => {
-  await requireAuth(event)
+  const user = await requireAuth(event)
 
   const name = getRouterParam(event, 'name')
   const id = getRouterParam(event, 'id')
@@ -17,6 +18,9 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Collection name and ID are required'
     })
   }
+
+  // Check update permission for this collection
+  await requirePermission(user, 'collections', 'update', name)
 
   const body = await readBody(event)
   const { data, translations, status } = body

@@ -23,6 +23,12 @@ export {
   type NewUserSqlite
 } from './users'
 
+export {
+  rolesSqlite,
+  type RoleSqlite,
+  type NewRoleSqlite
+} from './roles'
+
 // PostgreSQL schemas
 export {
   contentPostgres,
@@ -47,3 +53,18 @@ export {
   type UserPostgres,
   type NewUserPostgres
 } from './users'
+
+export {
+  rolesPostgres,
+  type RolePostgres,
+  type NewRolePostgres
+} from './roles'
+
+// Role types and defaults
+export {
+  DEFAULT_ROLES,
+  type RolePermissions,
+  type ResourcePermissions,
+  type PermissionAction,
+  type PermissionResource
+} from './roles'

@@ -30,6 +30,16 @@ const navigation = computed(() => [
     label: 'Media',
     icon: 'i-heroicons-photo',
     to: `${config.public.cms.adminPath}/media`
+  },
+  {
+    label: 'Users',
+    icon: 'i-heroicons-users',
+    to: `${config.public.cms.adminPath}/users`
+  },
+  {
+    label: 'Roles',
+    icon: 'i-heroicons-shield-check',
+    to: `${config.public.cms.adminPath}/roles`
   }
 ])
 
@@ -95,7 +105,7 @@ watch(() => route.path, () => {
           </div>
           <div class="cms-user__info">
             <span class="cms-user__name">{{ user.username }}</span>
-            <span class="cms-user__role">{{ user.role }}</span>
+            <span class="cms-user__role">{{ user.roleName || user.role }}</span>
           </div>
         </div>
         <button class="cms-user__logout" @click="logout" title="Sign out">

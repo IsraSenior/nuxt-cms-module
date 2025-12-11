@@ -1,10 +1,11 @@
 import { defineEventHandler, getRouterParam, createError } from '#imports'
 import { eq, and } from 'drizzle-orm'
 import { requireAuth } from '../../../../../utils/auth'
+import { requirePermission } from '../../../../../utils/permissions'
 import { useCmsDatabase, contentSqlite, contentPostgres, getDatabaseType } from '../../../../../database/client'
 
 export default defineEventHandler(async (event) => {
-  await requireAuth(event)
+  const user = await requireAuth(event)
 
   const name = getRouterParam(event, 'name')
   const id = getRouterParam(event, 'id')
@@ -15,6 +16,9 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Collection name and ID are required'
     })
   }
+
+  // Check delete permission for this collection
+  await requirePermission(user, 'collections', 'delete', name)
 
   const db = useCmsDatabase()
   const isPostgres = getDatabaseType() === 'postgresql'
