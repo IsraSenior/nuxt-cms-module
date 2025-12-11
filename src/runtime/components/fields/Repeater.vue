@@ -286,17 +286,27 @@ function getFieldComponent(type: string): string {
           v-show="!collapsedItems.has(index)"
           class="cms-repeater__content"
         >
-          <component
+          <div
             v-for="(fieldDef, fieldKey) in field.fields"
             :key="fieldKey"
-            :is="getFieldComponent(fieldDef.type)"
-            :model-value="item[fieldKey]"
-            :field="fieldDef"
-            :field-name="fieldKey"
-            :disabled="disabled"
-            :form-data="item"
-            @update:model-value="updateItemField(index, fieldKey, $event)"
-          />
+            class="cms-repeater__field"
+            :class="{
+              'cms-repeater__field--half': fieldDef.width === 'half',
+              'cms-repeater__field--third': fieldDef.width === 'third',
+              'cms-repeater__field--two-thirds': fieldDef.width === 'two-thirds',
+              'cms-repeater__field--quarter': fieldDef.width === 'quarter'
+            }"
+          >
+            <component
+              :is="getFieldComponent(fieldDef.type)"
+              :model-value="item[fieldKey]"
+              :field="fieldDef"
+              :field-name="fieldKey"
+              :disabled="disabled"
+              :form-data="item"
+              @update:model-value="updateItemField(index, fieldKey, $event)"
+            />
+          </div>
         </div>
       </div>
 
@@ -478,9 +488,29 @@ function getFieldComponent(type: string): string {
 
 .cms-repeater__content {
   padding: 16px;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
   gap: 16px;
+}
+
+.cms-repeater__field {
+  grid-column: span 12;
+}
+
+.cms-repeater__field--half {
+  grid-column: span 6;
+}
+
+.cms-repeater__field--third {
+  grid-column: span 4;
+}
+
+.cms-repeater__field--two-thirds {
+  grid-column: span 8;
+}
+
+.cms-repeater__field--quarter {
+  grid-column: span 3;
 }
 
 .cms-repeater__add-btn {
