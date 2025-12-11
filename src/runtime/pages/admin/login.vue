@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { reactive, onMounted } from 'vue'
+import { reactive, onMounted, computed } from 'vue'
 import { definePageMeta, useRuntimeConfig, navigateTo } from '#imports'
 import { useCmsAdmin } from '../../composables/useCmsAdmin'
+import type { BrandingConfig } from '../../types'
 
 definePageMeta({
   layout: false
@@ -9,6 +10,9 @@ definePageMeta({
 
 const { login, loading, error, isAuthenticated } = useCmsAdmin()
 const config = useRuntimeConfig()
+
+// Get branding config with defaults
+const branding = computed<BrandingConfig>(() => config.public.cms.branding || {})
 
 const form = reactive({
   username: '',
@@ -30,34 +34,68 @@ onMounted(async () => {
     await navigateTo(config.public.cms.adminPath)
   }
 })
+
+// Computed styles for branding panel background
+const brandingPanelStyle = computed(() => {
+  if (branding.value.login?.backgroundImage) {
+    return {
+      backgroundImage: `linear-gradient(135deg, rgba(37, 99, 235, 0.9) 0%, rgba(29, 78, 216, 0.9) 50%, rgba(30, 64, 175, 0.9) 100%), url(${branding.value.login.backgroundImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }
+  }
+  return {}
+})
+
+// CSS variable for primary color
+const primaryColorStyle = computed(() => {
+  const color = branding.value.primaryColor || '#2563eb'
+  return {
+    '--cms-primary': color,
+    '--cms-primary-hover': adjustColor(color, -15),
+    '--cms-primary-dark': adjustColor(color, -25)
+  }
+})
+
+// Helper to darken/lighten a hex color
+function adjustColor(hex: string, percent: number): string {
+  const num = parseInt(hex.replace('#', ''), 16)
+  const r = Math.min(255, Math.max(0, (num >> 16) + percent))
+  const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + percent))
+  const b = Math.min(255, Math.max(0, (num & 0x0000FF) + percent))
+  return '#' + (0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1)
+}
 </script>
 
 <template>
-  <div class="login">
+  <div class="login" :style="primaryColorStyle">
     <!-- Branding Panel -->
-    <div class="login__branding">
+    <div class="login__branding" :style="brandingPanelStyle">
       <div class="login__branding-content">
-        <div class="login__branding-icon">
+        <!-- Custom Logo or Icon -->
+        <div v-if="branding.logo" class="login__branding-logo">
+          <img :src="branding.logo" :alt="branding.name || 'CMS'" class="login__branding-logo-img" />
+        </div>
+        <div v-else class="login__branding-icon">
           <UIcon name="i-heroicons-cube" class="w-12 h-12 text-white" />
         </div>
+
         <h1 class="login__branding-title">
-          Content Management System
+          {{ branding.login?.title || 'Content Management System' }}
         </h1>
         <p class="login__branding-text">
-          Manage your content with a powerful and intuitive interface.
+          {{ branding.login?.description || 'Manage your content with a powerful and intuitive interface.' }}
         </p>
-        <div class="login__branding-features">
-          <div class="login__feature">
-            <UIcon name="i-heroicons-check-circle" class="login__feature-icon" />
-            <span>Collections & Singletons</span>
-          </div>
-          <div class="login__feature">
-            <UIcon name="i-heroicons-check-circle" class="login__feature-icon" />
-            <span>Media Library</span>
-          </div>
-          <div class="login__feature">
-            <UIcon name="i-heroicons-check-circle" class="login__feature-icon" />
-            <span>Custom Fields</span>
+
+        <!-- Features List -->
+        <div v-if="branding.login?.features?.length" class="login__branding-features">
+          <div
+            v-for="(feature, index) in branding.login.features"
+            :key="index"
+            class="login__feature"
+          >
+            <UIcon :name="feature.icon || 'i-heroicons-check-circle'" class="login__feature-icon" />
+            <span>{{ feature.text }}</span>
           </div>
         </div>
       </div>
@@ -68,10 +106,15 @@ onMounted(async () => {
       <div class="login__form-container">
         <!-- Mobile Logo -->
         <div class="login__mobile-logo">
-          <div class="login__mobile-icon">
-            <UIcon name="i-heroicons-cube" class="w-6 h-6 text-white" />
-          </div>
-          <span class="login__mobile-text">CMS</span>
+          <template v-if="branding.logo">
+            <img :src="branding.logo" :alt="branding.name || 'CMS'" class="login__mobile-logo-img" />
+          </template>
+          <template v-else>
+            <div class="login__mobile-icon">
+              <UIcon name="i-heroicons-cube" class="w-6 h-6 text-white" />
+            </div>
+            <span class="login__mobile-text">{{ branding.name || 'CMS' }}</span>
+          </template>
         </div>
 
         <!-- Form Header -->
@@ -131,7 +174,19 @@ onMounted(async () => {
 
         <!-- Footer -->
         <p class="login__footer">
-          Powered by <span class="login__footer-brand">Nuxt CMS</span>
+          Powered by
+          <a
+            v-if="branding.poweredBy?.url"
+            :href="branding.poweredBy.url"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="login__footer-brand login__footer-brand--link"
+          >
+            {{ branding.poweredBy?.name || 'Neskeep' }}
+          </a>
+          <span v-else class="login__footer-brand">
+            {{ branding.poweredBy?.name || 'Neskeep' }}
+          </span>
         </p>
       </div>
     </div>
@@ -156,10 +211,20 @@ onMounted(async () => {
 .login__branding {
   display: none;
   width: 45%;
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #1e40af 100%);
+  background: linear-gradient(135deg, var(--cms-primary, #2563eb) 0%, var(--cms-primary-hover, #1d4ed8) 50%, var(--cms-primary-dark, #1e40af) 100%);
   padding: 48px;
   position: relative;
   overflow: hidden;
+}
+
+.login__branding-logo {
+  margin: 0 auto 32px;
+}
+
+.login__branding-logo-img {
+  max-width: 180px;
+  max-height: 80px;
+  object-fit: contain;
 }
 
 .login__branding::before {
@@ -286,12 +351,18 @@ onMounted(async () => {
 .login__mobile-icon {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, var(--cms-primary, #2563eb) 0%, var(--cms-primary-hover, #1d4ed8) 100%);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.login__mobile-logo-img {
+  max-width: 160px;
+  max-height: 48px;
+  object-fit: contain;
 }
 
 .login__mobile-text {
@@ -387,7 +458,7 @@ onMounted(async () => {
 
 .login__input:focus {
   outline: none;
-  border-color: #2563eb;
+  border-color: var(--cms-primary, #2563eb);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
@@ -402,7 +473,7 @@ onMounted(async () => {
   font-size: 16px;
   font-weight: 600;
   color: white;
-  background-color: #2563eb;
+  background-color: var(--cms-primary, #2563eb);
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -410,7 +481,7 @@ onMounted(async () => {
 }
 
 .login__submit:hover {
-  background-color: #1d4ed8;
+  background-color: var(--cms-primary-hover, #1d4ed8);
 }
 
 .login__submit:active {
@@ -444,8 +515,16 @@ onMounted(async () => {
 }
 
 .login__footer-brand {
-  color: #2563eb;
+  color: var(--cms-primary, #2563eb);
   font-weight: 500;
 }
 
+.login__footer-brand--link {
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.login__footer-brand--link:hover {
+  opacity: 0.8;
+}
 </style>

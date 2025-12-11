@@ -2,10 +2,34 @@
 import { ref, computed, watch } from 'vue'
 import { useRuntimeConfig, useRoute } from '#imports'
 import { useCmsAdmin } from '../../composables/useCmsAdmin'
+import type { BrandingConfig } from '../../types'
 
 const { user, logout } = useCmsAdmin()
 const config = useRuntimeConfig()
 const route = useRoute()
+
+// Get branding config
+const branding = computed<BrandingConfig>(() => config.public.cms.branding || {})
+
+// CSS variables for primary color
+const primaryColorStyle = computed(() => {
+  const color = branding.value.primaryColor || '#2563eb'
+  return {
+    '--cms-primary': color,
+    '--cms-primary-hover': adjustColor(color, -15),
+    '--cms-primary-dark': adjustColor(color, -25),
+    '--cms-primary-light': adjustColor(color, 40)
+  }
+})
+
+// Helper to darken/lighten a hex color
+function adjustColor(hex: string, percent: number): string {
+  const num = parseInt(hex.replace('#', ''), 16)
+  const r = Math.min(255, Math.max(0, (num >> 16) + percent))
+  const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + percent))
+  const b = Math.min(255, Math.max(0, (num & 0x0000FF) + percent))
+  return '#' + (0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1)
+}
 
 // Mobile sidebar state
 const sidebarOpen = ref(false)
@@ -57,7 +81,7 @@ watch(() => route.path, () => {
 </script>
 
 <template>
-  <div class="cms-layout">
+  <div class="cms-layout" :style="primaryColorStyle">
     <!-- Mobile overlay -->
     <Transition name="fade">
       <div
@@ -72,10 +96,17 @@ watch(() => route.path, () => {
       <!-- Logo -->
       <div class="cms-sidebar__header">
         <div class="cms-logo">
-          <div class="cms-logo__icon">
-            <UIcon name="i-heroicons-cube" class="cms-logo__svg" />
-          </div>
-          <span class="cms-logo__text">CMS</span>
+          <!-- Custom logo image -->
+          <template v-if="branding.logo">
+            <img :src="branding.logo" :alt="branding.name || 'CMS'" class="cms-logo__img" />
+          </template>
+          <!-- Default icon + text -->
+          <template v-else>
+            <div class="cms-logo__icon">
+              <UIcon name="i-heroicons-cube" class="cms-logo__svg" />
+            </div>
+            <span class="cms-logo__text">{{ branding.name || 'CMS' }}</span>
+          </template>
         </div>
         <!-- Mobile close button -->
         <button class="cms-sidebar__close" @click="sidebarOpen = false">
@@ -123,10 +154,17 @@ watch(() => route.path, () => {
           <UIcon name="i-heroicons-bars-3" class="w-6 h-6" />
         </button>
         <div class="cms-topbar__logo">
-          <div class="cms-logo__icon cms-logo__icon--small">
-            <UIcon name="i-heroicons-cube" class="w-4 h-4 text-white" />
-          </div>
-          <span class="cms-logo__text">CMS</span>
+          <!-- Custom logo image -->
+          <template v-if="branding.logo">
+            <img :src="branding.logo" :alt="branding.name || 'CMS'" class="cms-logo__img cms-logo__img--small" />
+          </template>
+          <!-- Default icon + text -->
+          <template v-else>
+            <div class="cms-logo__icon cms-logo__icon--small">
+              <UIcon name="i-heroicons-cube" class="w-4 h-4 text-white" />
+            </div>
+            <span class="cms-logo__text">{{ branding.name || 'CMS' }}</span>
+          </template>
         </div>
         <div class="cms-topbar__spacer" />
       </header>
@@ -257,7 +295,7 @@ watch(() => route.path, () => {
 .cms-logo__icon {
   width: 36px;
   height: 36px;
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  background: linear-gradient(135deg, var(--cms-primary, #2563eb) 0%, var(--cms-primary-hover, #1d4ed8) 100%) !important;
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -269,6 +307,17 @@ watch(() => route.path, () => {
   width: 28px;
   height: 28px;
   border-radius: 8px;
+}
+
+.cms-logo__img {
+  max-height: 36px;
+  max-width: 140px;
+  object-fit: contain;
+}
+
+.cms-logo__img--small {
+  max-height: 28px;
+  max-width: 100px;
 }
 
 .cms-logo__svg {
@@ -313,13 +362,13 @@ watch(() => route.path, () => {
 }
 
 .cms-nav__item--active {
-  background-color: #eff6ff !important;
-  color: #2563eb !important;
+  background-color: var(--cms-primary-light, #eff6ff) !important;
+  color: var(--cms-primary, #2563eb) !important;
 }
 
 .cms-nav__item--active:hover {
-  background-color: #eff6ff !important;
-  color: #2563eb !important;
+  background-color: var(--cms-primary-light, #eff6ff) !important;
+  color: var(--cms-primary, #2563eb) !important;
 }
 
 .cms-nav__icon {
@@ -353,7 +402,7 @@ watch(() => route.path, () => {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  background: linear-gradient(135deg, var(--cms-primary, #2563eb) 0%, var(--cms-primary-hover, #1d4ed8) 100%) !important;
   color: white !important;
   display: flex;
   align-items: center;

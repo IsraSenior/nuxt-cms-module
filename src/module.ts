@@ -14,7 +14,7 @@ import type { NuxtModule } from '@nuxt/schema'
 import { defu } from 'defu'
 import { existsSync } from 'fs'
 import { join } from 'path'
-import type { CmsModuleOptions, CmsConfig } from './runtime/types'
+import type { CmsModuleOptions, CmsConfig, BrandingConfig } from './runtime/types'
 
 export type { CmsModuleOptions, CmsConfig }
 export { defineCmsConfig } from './runtime/types'
@@ -178,9 +178,32 @@ const cmsModule: NuxtModule<CmsModuleOptions> = defineNuxtModule({
       }
     }
 
+    // Set branding defaults
+    const defaultBranding: BrandingConfig = {
+      name: 'CMS',
+      primaryColor: '#2563eb',
+      poweredBy: {
+        name: 'Neskeep',
+        url: 'https://neskeep.com'
+      },
+      login: {
+        title: 'Content Management System',
+        description: 'Manage your content with a powerful and intuitive interface.',
+        features: [
+          { icon: 'heroicons:rectangle-stack', text: 'Collections & Singletons' },
+          { icon: 'heroicons:photo', text: 'Media Library' },
+          { icon: 'heroicons:squares-plus', text: 'Custom Fields' }
+        ]
+      }
+    }
+
+    // Merge user branding with defaults
+    const branding = defu(moduleOptions.admin.branding || {}, defaultBranding)
+
     nuxt.options.runtimeConfig.public.cms = {
       adminPath: moduleOptions.admin.path,
-      adminEnabled: moduleOptions.admin.enabled
+      adminEnabled: moduleOptions.admin.enabled,
+      branding
     }
 
     // Add server plugin for database initialization

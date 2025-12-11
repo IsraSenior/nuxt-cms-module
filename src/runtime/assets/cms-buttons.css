@@ -44,16 +44,16 @@
   to { transform: rotate(360deg); }
 }
 
-/* Primary Button (Blue) */
+/* Primary Button (uses CSS variable for theming) */
 .cms-btn--primary {
-  background-color: #2563eb;
+  background-color: var(--cms-primary, #2563eb);
   color: white;
-  border-color: #2563eb;
+  border-color: var(--cms-primary, #2563eb);
 }
 
 .cms-btn--primary:hover:not(:disabled) {
-  background-color: #1d4ed8;
-  border-color: #1d4ed8;
+  background-color: var(--cms-primary-hover, #1d4ed8);
+  border-color: var(--cms-primary-hover, #1d4ed8);
 }
 
 /* Secondary Button (Gray solid) */

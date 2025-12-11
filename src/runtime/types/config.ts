@@ -64,6 +64,49 @@ export interface CmsConfig {
 }
 
 /**
+ * Login page branding customization
+ */
+export interface LoginBrandingConfig {
+  /** Background image URL for left panel */
+  backgroundImage?: string
+  /** Main heading text */
+  title?: string
+  /** Description text below heading */
+  description?: string
+  /** Feature list with icons */
+  features?: Array<{
+    icon: string
+    text: string
+  }>
+}
+
+/**
+ * Powered by attribution
+ */
+export interface PoweredByConfig {
+  /** Brand name to display */
+  name: string
+  /** Optional link URL */
+  url?: string
+}
+
+/**
+ * Admin panel branding configuration
+ */
+export interface BrandingConfig {
+  /** CMS name shown in logo */
+  name?: string
+  /** Custom logo image URL (replaces icon) */
+  logo?: string
+  /** Primary theme color (hex) */
+  primaryColor?: string
+  /** Powered by attribution */
+  poweredBy?: PoweredByConfig
+  /** Login page customization */
+  login?: LoginBrandingConfig
+}
+
+/**
  * Module options for nuxt.config.ts
  */
 export interface CmsModuleOptions {
@@ -87,6 +130,8 @@ export interface CmsModuleOptions {
       username: string
       password: string
     }
+    /** Branding customization */
+    branding?: BrandingConfig
   }
   /** Upload configuration */
   uploads?: {
