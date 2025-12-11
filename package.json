@@ -1,6 +1,6 @@
 {
   "name": "@neskeep/nuxt-cms",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A developer-friendly CMS module for Nuxt 4 with multi-database support and i18n",
   "license": "MIT",
   "type": "module",
@@ -39,7 +39,7 @@
     "@iconify-json/heroicons": "^1.2.2",
     "jiti": "^2.4.2",
     "defu": "^6.1.4",
-    "drizzle-orm": "^0.38.3",
+    "drizzle-orm": "0.38.3",
     "better-sqlite3": "^11.7.0",
     "postgres": "^3.4.5",
     "@tiptap/vue-3": "^2.11.2",
