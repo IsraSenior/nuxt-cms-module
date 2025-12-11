@@ -180,7 +180,7 @@ function handleSort(col: Column) {
 }
 
 .cms-table__th--sorted {
-  color: #2563eb;
+  color: var(--cms-primary, #2563eb);
 }
 
 .cms-table__th--center {
@@ -205,7 +205,7 @@ function handleSort(col: Column) {
 .cms-table__icon {
   width: 16px;
   height: 16px;
-  color: #2563eb;
+  color: var(--cms-primary, #2563eb);
 }
 
 .cms-table__icon--inactive {
@@ -267,7 +267,7 @@ function handleSort(col: Column) {
   width: 20px;
   height: 20px;
   border: 2px solid #e5e7eb;
-  border-top-color: #2563eb;
+  border-top-color: var(--cms-primary, #2563eb);
   border-radius: 50%;
   animation: cms-table-spin 0.8s linear infinite;
 }

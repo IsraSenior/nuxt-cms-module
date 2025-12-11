@@ -397,7 +397,7 @@ function formatDateTime(dateStr: string | null | undefined): string {
   width: 32px;
   height: 32px;
   border: 3px solid #e5e7eb;
-  border-top-color: #2563eb;
+  border-top-color: var(--cms-primary, #2563eb);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -581,16 +581,16 @@ function formatDateTime(dateStr: string | null | undefined): string {
   height: 24px;
 }
 
-/* Primary Button (Blue) */
+/* Primary Button (uses CSS variable for theming) */
 .cms-btn--primary {
-  background-color: #2563eb;
+  background-color: var(--cms-primary, #2563eb);
   color: white;
-  border-color: #2563eb;
+  border-color: var(--cms-primary, #2563eb);
 }
 
 .cms-btn--primary:hover:not(:disabled) {
-  background-color: #1d4ed8;
-  border-color: #1d4ed8;
+  background-color: var(--cms-primary-hover, #1d4ed8);
+  border-color: var(--cms-primary-hover, #1d4ed8);
 }
 
 /* Outline Button */

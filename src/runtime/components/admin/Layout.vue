@@ -362,13 +362,13 @@ watch(() => route.path, () => {
 }
 
 .cms-nav__item--active {
-  background-color: var(--cms-primary-light, #eff6ff) !important;
-  color: var(--cms-primary, #2563eb) !important;
+  background-color: var(--cms-primary, #2563eb) !important;
+  color: #ffffff !important;
 }
 
 .cms-nav__item--active:hover {
-  background-color: var(--cms-primary-light, #eff6ff) !important;
-  color: var(--cms-primary, #2563eb) !important;
+  background-color: var(--cms-primary-hover, #1d4ed8) !important;
+  color: #ffffff !important;
 }
 
 .cms-nav__icon {

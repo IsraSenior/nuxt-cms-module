@@ -188,12 +188,7 @@ const cmsModule: NuxtModule<CmsModuleOptions> = defineNuxtModule({
       },
       login: {
         title: 'Content Management System',
-        description: 'Manage your content with a powerful and intuitive interface.',
-        features: [
-          { icon: 'heroicons:rectangle-stack', text: 'Collections & Singletons' },
-          { icon: 'heroicons:photo', text: 'Media Library' },
-          { icon: 'heroicons:squares-plus', text: 'Custom Fields' }
-        ]
+        description: 'Manage your content with a powerful and intuitive interface.'
       }
     }
 

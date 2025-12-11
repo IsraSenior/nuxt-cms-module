@@ -242,7 +242,7 @@ function handleCancel() {
 
 .cms-form-page__date-input:focus {
   outline: none;
-  border-color: #2563eb;
+  border-color: var(--cms-primary, #2563eb);
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
 }
 </style>

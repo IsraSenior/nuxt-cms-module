@@ -325,7 +325,7 @@ const fieldGroups = computed(() => {
 .cms-form__locale-icon {
   width: 20px;
   height: 20px;
-  color: #2563eb;
+  color: var(--cms-primary, #2563eb);
 }
 
 .cms-form__locale-title {
@@ -339,7 +339,7 @@ const fieldGroups = computed(() => {
   padding: 4px 10px;
   font-size: 12px;
   font-weight: 600;
-  background-color: #2563eb;
+  background-color: var(--cms-primary, #2563eb);
   color: white;
   border-radius: 6px;
 }
@@ -369,14 +369,14 @@ const fieldGroups = computed(() => {
 }
 
 .cms-form__locale-btn--active {
-  background-color: #2563eb;
+  background-color: var(--cms-primary, #2563eb);
   color: white;
-  border-color: #2563eb;
+  border-color: var(--cms-primary, #2563eb);
 }
 
 .cms-form__locale-btn--active:hover {
-  background-color: #1d4ed8;
-  border-color: #1d4ed8;
+  background-color: var(--cms-primary-hover, #1d4ed8);
+  border-color: var(--cms-primary-hover, #1d4ed8);
 }
 
 .cms-form__locale-hint {
@@ -394,8 +394,8 @@ const fieldGroups = computed(() => {
   justify-content: center;
   width: 16px;
   height: 16px;
-  background-color: #dbeafe;
-  color: #2563eb;
+  background-color: var(--cms-primary-light, #dbeafe);
+  color: var(--cms-primary, #2563eb);
   border-radius: 4px;
   vertical-align: middle;
 }
@@ -455,15 +455,15 @@ const fieldGroups = computed(() => {
   justify-content: center;
   width: 20px;
   height: 20px;
-  background-color: #dbeafe;
-  color: #2563eb;
+  background-color: var(--cms-primary-light, #dbeafe);
+  color: var(--cms-primary, #2563eb);
   border-radius: 4px;
   cursor: help;
   transition: background-color 0.15s ease;
 }
 
 .cms-form__translatable-badge:hover {
-  background-color: #bfdbfe;
+  background-color: var(--cms-primary-light, #bfdbfe);
 }
 
 .cms-form__translatable-badge svg {

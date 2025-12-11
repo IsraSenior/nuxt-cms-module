@@ -140,7 +140,7 @@ const singletons = computed(() => {
 }
 
 .item-card:hover {
-  border-color: #2563eb;
+  border-color: var(--cms-primary, #2563eb);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
@@ -158,8 +158,8 @@ const singletons = computed(() => {
 }
 
 .item-card:hover .item-card__icon {
-  background-color: #eff6ff;
-  color: #2563eb;
+  background-color: var(--cms-primary-light, #eff6ff);
+  color: var(--cms-primary, #2563eb);
 }
 
 .item-card__content {
@@ -177,7 +177,7 @@ const singletons = computed(() => {
 }
 
 .item-card:hover .item-card__title {
-  color: #2563eb;
+  color: var(--cms-primary, #2563eb);
 }
 
 .item-card__description {
@@ -198,7 +198,7 @@ const singletons = computed(() => {
 }
 
 .item-card:hover .item-card__arrow {
-  color: #2563eb;
+  color: var(--cms-primary, #2563eb);
   transform: translateX(4px);
 }
 

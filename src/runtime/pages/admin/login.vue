@@ -86,18 +86,6 @@ function adjustColor(hex: string, percent: number): string {
         <p class="login__branding-text">
           {{ branding.login?.description || 'Manage your content with a powerful and intuitive interface.' }}
         </p>
-
-        <!-- Features List -->
-        <div v-if="branding.login?.features?.length" class="login__branding-features">
-          <div
-            v-for="(feature, index) in branding.login.features"
-            :key="index"
-            class="login__feature"
-          >
-            <UIcon :name="feature.icon || 'i-heroicons-check-circle'" class="login__feature-icon" />
-            <span>{{ feature.text }}</span>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -287,28 +275,6 @@ function adjustColor(hex: string, percent: number): string {
   font-size: 16px;
   color: rgba(255, 255, 255, 0.8);
   line-height: 1.6;
-  margin-bottom: 40px;
-}
-
-.login__branding-features {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.login__feature {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.login__feature-icon {
-  width: 20px;
-  height: 20px;
-  color: rgba(255, 255, 255, 0.7);
 }
 
 /* ============================================
