@@ -1,3 +1,7 @@
+packages:
+  - '.'
+  - 'playground'
+
 ignoredBuiltDependencies:
   - '@parcel/watcher'
   - better-sqlite3
