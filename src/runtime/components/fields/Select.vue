@@ -632,7 +632,8 @@ onUnmounted(() => {
 
 .cms-select__option--selected:hover:not(:disabled),
 .cms-select__option--selected.cms-select__option--highlighted:not(:disabled) {
-  background-color: var(--cms-primary-light, #dbeafe);
+  background-color: var(--cms-primary, #2563eb);
+  color: white;
 }
 
 .cms-select__option--disabled {

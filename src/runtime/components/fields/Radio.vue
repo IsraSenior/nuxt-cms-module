@@ -99,13 +99,13 @@ const options = computed(() => props.field.options.map(opt => ({
 }
 
 .cms-field__radio-item:hover:not(.cms-field__radio-item--disabled) {
-  border-color: #2563eb;
+  border-color: var(--cms-primary, #2563eb);
   background-color: #f8fafc;
 }
 
 .cms-field__radio-item--checked {
-  border-color: #2563eb;
-  background-color: #eff6ff;
+  border-color: var(--cms-primary, #2563eb);
+  background-color: var(--cms-primary-light, #eff6ff);
 }
 
 .cms-field__radio-item--disabled {
@@ -134,14 +134,14 @@ const options = computed(() => props.field.options.map(opt => ({
 }
 
 .cms-field__radio-item--checked .cms-field__radio-circle {
-  border-color: #2563eb;
+  border-color: var(--cms-primary, #2563eb);
 }
 
 .cms-field__radio-dot {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: #2563eb;
+  background-color: var(--cms-primary, #2563eb);
   transform: scale(0);
   transition: transform 0.15s ease;
 }

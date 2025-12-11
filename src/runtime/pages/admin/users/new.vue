@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { definePageMeta, useRuntimeConfig, useFetch, navigateTo } from '#imports'
+import CmsFieldSelect from '../../../components/fields/Select.vue'
 
 definePageMeta({
   layout: false,
@@ -33,6 +34,11 @@ const { data: rolesData } = await useFetch<{
 }>('/api/cms/roles')
 
 const roles = computed(() => rolesData.value?.data || [])
+
+const roleOptions = computed(() => roles.value.map(role => ({
+  value: role.id,
+  label: role.displayName
+})))
 
 // Set default role to editor
 const editorRole = computed(() => roles.value.find(r => r.name === 'editor'))
@@ -167,12 +173,15 @@ const submit = async () => {
 
           <!-- Role -->
           <div class="form-field">
-            <label for="role" class="form-field__label">Role</label>
-            <select id="role" v-model="form.roleId" class="form-field__input">
-              <option v-for="role in roles" :key="role.id" :value="role.id">
-                {{ role.displayName }}
-              </option>
-            </select>
+            <CmsFieldSelect
+              v-model="form.roleId"
+              :field="{
+                type: 'select',
+                label: 'Role',
+                options: roleOptions
+              }"
+              field-name="role"
+            />
             <p class="form-field__hint">
               {{ roles.find(r => r.id === form.roleId)?.description || '' }}
             </p>

@@ -115,13 +115,13 @@ function toggle(optValue: string | number | boolean) {
 }
 
 .cms-field__checkbox-item:hover:not(.cms-field__checkbox-item--disabled) {
-  border-color: #2563eb;
+  border-color: var(--cms-primary, #2563eb);
   background-color: #f8fafc;
 }
 
 .cms-field__checkbox-item--checked {
-  border-color: #2563eb;
-  background-color: #eff6ff;
+  border-color: var(--cms-primary, #2563eb);
+  background-color: var(--cms-primary-light, #eff6ff);
 }
 
 .cms-field__checkbox-item--disabled {
@@ -151,8 +151,8 @@ function toggle(optValue: string | number | boolean) {
 }
 
 .cms-field__checkbox-item--checked .cms-field__checkbox-box {
-  border-color: #2563eb;
-  background-color: #2563eb;
+  border-color: var(--cms-primary, #2563eb);
+  background-color: var(--cms-primary, #2563eb);
 }
 
 .cms-field__checkbox-icon {

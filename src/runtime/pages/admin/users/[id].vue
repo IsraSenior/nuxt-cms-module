@@ -2,6 +2,7 @@
 import { ref, computed, watch } from 'vue'
 import { definePageMeta, useRuntimeConfig, useFetch, useRoute, navigateTo } from '#imports'
 import { useCmsAdmin } from '../../../composables/useCmsAdmin'
+import CmsFieldSelect from '../../../components/fields/Select.vue'
 
 definePageMeta({
   layout: false,
@@ -53,6 +54,11 @@ const { data: rolesData } = await useFetch<{
 }>('/api/cms/roles')
 
 const roles = computed(() => rolesData.value?.data || [])
+
+const roleOptions = computed(() => roles.value.map(role => ({
+  value: role.id,
+  label: role.displayName
+})))
 
 // Initialize form with user data
 watch(userData, (data) => {
@@ -199,17 +205,16 @@ const submit = async () => {
 
           <!-- Role -->
           <div class="form-field">
-            <label for="role" class="form-field__label">Role</label>
-            <select
-              id="role"
+            <CmsFieldSelect
               v-model="form.roleId"
-              class="form-field__input"
-              :disabled="isOwnProfile"
-            >
-              <option v-for="role in roles" :key="role.id" :value="role.id">
-                {{ role.displayName }}
-              </option>
-            </select>
+              :field="{
+                type: 'select',
+                label: 'Role',
+                options: roleOptions,
+                disabled: isOwnProfile
+              }"
+              field-name="role"
+            />
             <p v-if="isOwnProfile" class="form-field__hint form-field__hint--warning">
               You cannot change your own role
             </p>

@@ -310,14 +310,17 @@ watch(() => route.path, () => {
 }
 
 .cms-logo__img {
-  max-height: 36px;
+  height: 36px;
   max-width: 140px;
+  width: auto;
   object-fit: contain;
+  display: block;
 }
 
 .cms-logo__img--small {
-  max-height: 28px;
+  height: 28px;
   max-width: 100px;
+  width: auto;
 }
 
 .cms-logo__svg {
