@@ -23,6 +23,9 @@ const targetUsername = process.argv[2]
 // Try to find the SQLite database
 const possiblePaths = [
   join(process.cwd(), '.cms', 'cms.db'),
+  join(process.cwd(), '.nuxt', '.cms', 'cms.db'),
+  join(process.cwd(), 'server', '.cms', 'cms.db'),
+  join(process.cwd(), '.output', '.cms', 'cms.db'),
   join(process.cwd(), 'cms.db'),
   join(__dirname, '..', '.cms', 'cms.db'),
   join(__dirname, '..', 'playground', '.cms', 'cms.db')
