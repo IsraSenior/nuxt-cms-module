@@ -146,7 +146,8 @@ watch(() => route.path, () => {
       <div class="cms-user" v-if="user">
         <div class="cms-user__profile">
           <div class="cms-user__avatar-wrap">
-            {{ user.username?.charAt(0).toUpperCase() || 'U' }}
+            <img v-if="user.avatar" :src="user.avatar" :alt="user.username" class="cms-user__avatar-img" />
+            <span v-else>{{ user.username?.charAt(0).toUpperCase() || 'U' }}</span>
           </div>
           <div class="cms-user__info">
             <span class="cms-user__name">@{{ user.username }}</span>
@@ -428,6 +429,13 @@ watch(() => route.path, () => {
   font-size: 14px;
   font-weight: 600;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.cms-user__avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .cms-user__info {
