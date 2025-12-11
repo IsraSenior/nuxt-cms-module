@@ -1,62 +1,130 @@
-# @neskeep/nuxt-cms
+<p align="center">
+  <img src="https://raw.githubusercontent.com/neskeep/nuxt-cms-module/main/.github/logo.svg" alt="Nuxt CMS" width="200" />
+</p>
 
-A powerful, flexible headless CMS module for Nuxt 3 with built-in admin panel, i18n support, and multiple database backends.
+<h1 align="center">@neskeep/nuxt-cms</h1>
 
-## Features
+<p align="center">
+  <strong>A powerful, developer-friendly headless CMS module for Nuxt 3/4</strong>
+</p>
 
-- **Admin Panel** - Beautiful, responsive admin interface
-- **Multiple Databases** - SQLite (default) or PostgreSQL
-- **Collections & Singletons** - Flexible content modeling
-- **20+ Field Types** - Text, richtext, images, relations, repeaters, and more
-- **i18n Ready** - Built-in translation support with visual indicators
-- **Media Library** - Upload and manage images, videos, and files
-- **Type Safe** - Full TypeScript support with auto-completion
-- **Composables** - Easy data fetching with Vue composables
-- **Public API** - Ready-to-use endpoints for frontend consumption
-- **Flexible Layouts** - Configure field widths (full, half, third, quarter)
+<p align="center">
+  <a href="https://www.npmjs.com/package/@neskeep/nuxt-cms"><img src="https://img.shields.io/npm/v/@neskeep/nuxt-cms.svg?style=flat-square&color=2563eb" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/@neskeep/nuxt-cms"><img src="https://img.shields.io/npm/dm/@neskeep/nuxt-cms.svg?style=flat-square&color=10b981" alt="npm downloads"></a>
+  <a href="https://github.com/neskeep/nuxt-cms-module/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@neskeep/nuxt-cms.svg?style=flat-square&color=6366f1" alt="license"></a>
+  <a href="https://nuxt.com"><img src="https://img.shields.io/badge/Nuxt-3.16+-00DC82.svg?style=flat-square&logo=nuxt.js" alt="Nuxt"></a>
+  <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-Ready-3178C6.svg?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript"></a>
+</p>
 
-## Installation
+<p align="center">
+  <a href="#-quick-start">Quick Start</a> •
+  <a href="#-features">Features</a> •
+  <a href="#-configuration">Configuration</a> •
+  <a href="#-field-types">Field Types</a> •
+  <a href="#-branding">Branding</a> •
+  <a href="#-api">API</a>
+</p>
+
+---
+
+## Overview
+
+**@neskeep/nuxt-cms** is a full-featured, self-hosted headless CMS that integrates seamlessly into your Nuxt application. It provides a beautiful admin panel, flexible content modeling, built-in i18n support, and a powerful API — all with zero external dependencies.
 
 ```bash
-# npm
-npm install github:IsraSenior/nuxt-cms-module
-
-# pnpm
-pnpm add github:IsraSenior/nuxt-cms-module
-
-# yarn
-yarn add github:IsraSenior/nuxt-cms-module
+npm install @neskeep/nuxt-cms
 ```
 
-## Quick Start
+<p align="center">
+  <img src="https://raw.githubusercontent.com/neskeep/nuxt-cms-module/main/.github/screenshot.png" alt="Admin Panel Screenshot" width="800" />
+</p>
 
-### Option A: Automatic Setup (Recommended)
+---
 
-After installing the module, run the init command:
+## ✨ Features
+
+<table>
+<tr>
+<td width="50%">
+
+### Content Management
+- **Collections** — Create dynamic content types (posts, products, etc.)
+- **Singletons** — Manage unique pages (homepage, settings)
+- **20+ Field Types** — Text, richtext, images, relations, repeaters, and more
+- **Media Library** — Upload and manage images, videos, and files
+
+</td>
+<td width="50%">
+
+### Developer Experience
+- **Type Safe** — Full TypeScript support with auto-completion
+- **Vue Composables** — Easy data fetching with `useCmsCollection`, `useCmsSingleton`
+- **Public API** — Ready-to-use endpoints for frontend consumption
+- **Zero Config** — Works out of the box with sensible defaults
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### Internationalization
+- **Multi-language** — Built-in i18n support with per-field translations
+- **Visual Indicators** — Translation badges in the admin UI
+- **Locale Switcher** — Easy language switching in forms
+
+</td>
+<td width="50%">
+
+### Customization
+- **Custom Branding** — Logo, colors, login page customization
+- **Role-Based Access** — Users and roles management
+- **Flexible Layouts** — Control field widths (full, half, third, quarter)
+- **Multiple Databases** — SQLite (default) or PostgreSQL
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🚀 Quick Start
+
+### Installation
 
 ```bash
-# pnpm
-pnpm exec nuxt-cms-init
-
 # npm
+npm install @neskeep/nuxt-cms
+
+# pnpm
+pnpm add @neskeep/nuxt-cms
+
+# yarn
+yarn add @neskeep/nuxt-cms
+```
+
+### Automatic Setup (Recommended)
+
+Run the init command after installation:
+
+```bash
 npx nuxt-cms-init
-
-# yarn
-yarn nuxt-cms-init
 ```
 
-This will automatically:
-- Add `@neskeep/nuxt-cms` to your `nuxt.config.ts` modules
-- Add default CMS configuration
+This will:
+- Add `@neskeep/nuxt-cms` to your `nuxt.config.ts`
 - Create a `cms.config.ts` with example collections
+- Set up default admin credentials
 
-**Default credentials after init:** `admin` / `admin123`
+> **Default credentials:** `admin` / `admin123`
+>
+> ⚠️ **Change the password before deploying to production!**
 
-> ⚠️ **Important:** Change the default password in `nuxt.config.ts` before deploying to production!
+### Manual Setup
 
-### Option B: Manual Setup
+<details>
+<summary><strong>Click to expand manual setup instructions</strong></summary>
 
-#### 1. Add module to nuxt.config.ts
+#### 1. Add module to `nuxt.config.ts`
 
 ```ts
 export default defineNuxtConfig({
@@ -79,9 +147,7 @@ export default defineNuxtConfig({
 })
 ```
 
-#### 2. Create cms.config.ts
-
-Create a `cms.config.ts` file in your project root:
+#### 2. Create `cms.config.ts`
 
 ```ts
 import { defineCmsConfig } from '@neskeep/nuxt-cms'
@@ -94,37 +160,24 @@ export default defineCmsConfig({
     posts: {
       label: 'Post',
       labelPlural: 'Posts',
-      icon: 'DocumentTextIcon',
+      icon: 'heroicons:document-text',
       titleField: 'title',
-      slugField: 'slug',
       fields: {
         title: {
           type: 'text',
           label: 'Title',
           required: true,
-          translatable: true,
-          width: 'half'
+          translatable: true
         },
         slug: {
           type: 'slug',
           label: 'Slug',
-          from: 'title',
-          width: 'half'
+          from: 'title'
         },
         content: {
           type: 'richtext',
           label: 'Content',
           translatable: true
-        },
-        featuredImage: {
-          type: 'image',
-          label: 'Featured Image',
-          width: 'half'
-        },
-        publishedAt: {
-          type: 'datetime',
-          label: 'Publish Date',
-          width: 'half'
         }
       }
     }
@@ -133,16 +186,11 @@ export default defineCmsConfig({
   singletons: {
     homepage: {
       label: 'Homepage',
-      icon: 'HomeIcon',
+      icon: 'heroicons:home',
       fields: {
         heroTitle: {
           type: 'text',
           label: 'Hero Title',
-          translatable: true
-        },
-        heroDescription: {
-          type: 'textarea',
-          label: 'Hero Description',
           translatable: true
         }
       }
@@ -151,34 +199,79 @@ export default defineCmsConfig({
 })
 ```
 
-### 3. Access the Admin Panel
+</details>
 
-Start your Nuxt app and navigate to `/admin` (or your configured path).
+### Access the Admin Panel
 
-Default credentials:
-- Username: `admin`
-- Password: (as configured in nuxt.config.ts)
+Start your app and navigate to `/admin`:
 
-## Configuration
+```bash
+npm run dev
+# Open http://localhost:3000/admin
+```
+
+---
+
+## ⚙️ Configuration
 
 ### Module Options
 
+Configure the CMS in your `nuxt.config.ts`:
+
+```ts
+export default defineNuxtConfig({
+  cms: {
+    // Database configuration
+    database: {
+      provider: 'sqlite',        // 'sqlite' | 'postgresql'
+      filename: '.cms/data.db',  // SQLite file path
+      url: process.env.DATABASE_URL  // PostgreSQL connection URL
+    },
+
+    // Admin panel configuration
+    admin: {
+      enabled: true,
+      path: '/admin',
+      credentials: {
+        username: 'admin',
+        password: 'secure-password'
+      },
+      branding: { /* See Branding section */ }
+    },
+
+    // Upload configuration
+    uploads: {
+      path: '.cms/uploads',
+      maxSize: 10 * 1024 * 1024,  // 10MB
+      allowedTypes: [
+        'image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml',
+        'application/pdf',
+        'video/mp4', 'video/webm'
+      ]
+    },
+
+    // JWT configuration
+    jwt: {
+      secret: process.env.CMS_JWT_SECRET
+    }
+  }
+})
+```
+
+### Configuration Reference
+
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `database.provider` | `'sqlite' \| 'postgresql'` | `'sqlite'` | Database backend |
+| `database.provider` | `'sqlite'` \| `'postgresql'` | `'sqlite'` | Database backend |
 | `database.filename` | `string` | `'.cms/data.db'` | SQLite database file path |
 | `database.url` | `string` | - | PostgreSQL connection URL |
 | `admin.enabled` | `boolean` | `true` | Enable admin panel |
-| `admin.path` | `string` | `'/admin'` | Admin panel route |
-| `admin.credentials` | `object` | - | Admin login credentials |
+| `admin.path` | `string` | `'/admin'` | Admin panel route path |
+| `admin.credentials` | `object` | - | Initial admin user credentials |
+| `admin.branding` | `object` | - | Customize admin appearance |
 | `uploads.path` | `string` | `'.cms/uploads'` | Upload directory |
-| `uploads.maxSize` | `number` | `10485760` | Max file size (10MB) |
-| `uploads.allowedTypes` | `string[]` | See below | Allowed MIME types |
-
-Default allowed upload types:
-- `image/jpeg`, `image/png`, `image/gif`, `image/webp`, `image/svg+xml`
-- `application/pdf`
-- `video/mp4`, `video/webm`
+| `uploads.maxSize` | `number` | `10485760` | Max file size in bytes |
+| `uploads.allowedTypes` | `string[]` | See above | Allowed MIME types |
 
 ### PostgreSQL Setup
 
@@ -193,7 +286,68 @@ export default defineNuxtConfig({
 })
 ```
 
-## Field Types
+```env
+DATABASE_URL=postgresql://user:password@localhost:5432/mydb
+```
+
+---
+
+## 🎨 Branding
+
+Customize the admin panel appearance with the `branding` configuration:
+
+```ts
+export default defineNuxtConfig({
+  cms: {
+    admin: {
+      branding: {
+        // Logo and name
+        name: 'My CMS',                    // Text shown in sidebar
+        logo: '/images/logo.svg',          // Custom logo image URL
+
+        // Theme color
+        primaryColor: '#2563eb',           // Primary color (hex)
+
+        // "Powered by" footer
+        poweredBy: {
+          name: 'Neskeep',                 // Brand name
+          url: 'https://neskeep.com'       // Optional link
+        },
+
+        // Login page customization
+        login: {
+          backgroundImage: '/images/login-bg.jpg',  // Left panel background
+          title: 'Welcome to My CMS',
+          description: 'Manage your content with ease.',
+          features: [
+            { icon: 'heroicons:document-text', text: 'Easy content management' },
+            { icon: 'heroicons:photo', text: 'Media library' },
+            { icon: 'heroicons:globe-alt', text: 'Multi-language support' }
+          ]
+        }
+      }
+    }
+  }
+})
+```
+
+### Branding Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `name` | `string` | `'CMS'` | CMS name shown in logo area |
+| `logo` | `string` | - | Custom logo image URL |
+| `primaryColor` | `string` | `'#2563eb'` | Primary theme color (hex) |
+| `poweredBy.name` | `string` | `'Neskeep'` | "Powered by" text |
+| `poweredBy.url` | `string` | `'https://neskeep.com'` | Optional link URL |
+| `login.backgroundImage` | `string` | - | Login left panel background |
+| `login.title` | `string` | `'Content Management System'` | Login page heading |
+| `login.description` | `string` | - | Login page description |
+| `login.features` | `array` | - | Feature list with icons |
+
+---
+
+## 📝 Field Types
 
 ### Basic Fields
 
@@ -228,7 +382,7 @@ category: {
     { label: 'Technology', value: 'tech' },
     { label: 'Business', value: 'business' }
   ],
-  multiple: true // Allow multiple selection
+  multiple: true
 }
 
 // Radio buttons
@@ -253,12 +407,7 @@ tags: {
 }
 
 // Boolean toggle
-isActive: {
-  type: 'boolean',
-  label: 'Active',
-  labelOn: 'Yes',
-  labelOff: 'No'
-}
+isActive: { type: 'boolean', label: 'Active' }
 ```
 
 ### Content Fields
@@ -272,76 +421,37 @@ content: {
 }
 
 // Markdown editor
-readme: {
-  type: 'markdown',
-  label: 'README',
-  preview: true
-}
+readme: { type: 'markdown', label: 'README', preview: true }
 
 // Code editor
-snippet: {
-  type: 'code',
-  label: 'Code Snippet',
-  language: 'javascript',
-  lineNumbers: true
-}
+snippet: { type: 'code', label: 'Code', language: 'javascript' }
 ```
 
 ### Media Fields
 
 ```ts
 // Single image
-avatar: {
-  type: 'image',
-  label: 'Avatar',
-  aspectRatio: '1:1',
-  maxSize: 2097152 // 2MB
-}
+avatar: { type: 'image', label: 'Avatar' }
 
 // File upload
-document: {
-  type: 'file',
-  label: 'Document',
-  accept: ['application/pdf']
-}
+document: { type: 'file', label: 'Document', accept: ['application/pdf'] }
 
 // Image gallery
-gallery: {
-  type: 'gallery',
-  label: 'Gallery',
-  maxItems: 10,
-  sortable: true
-}
+gallery: { type: 'gallery', label: 'Gallery', maxItems: 10 }
 ```
 
-### Date/Time Fields
+### Date & Time Fields
 
 ```ts
-// Date only
-birthday: {
-  type: 'date',
-  label: 'Birthday',
-  format: 'YYYY-MM-DD'
-}
-
-// Date and time
-publishedAt: {
-  type: 'datetime',
-  label: 'Publish Date'
-}
-
-// Time only
-openingTime: {
-  type: 'time',
-  label: 'Opening Time',
-  step: 900 // 15 minute intervals
-}
+birthday: { type: 'date', label: 'Birthday' }
+publishedAt: { type: 'datetime', label: 'Publish Date' }
+openingTime: { type: 'time', label: 'Opening Time' }
 ```
 
 ### Relation Fields
 
 ```ts
-// Relation to another collection
+// One-to-one relation
 author: {
   type: 'relation',
   label: 'Author',
@@ -370,8 +480,8 @@ features: {
   max: 10,
   sortable: true,
   fields: {
-    icon: { type: 'text', label: 'Icon' },
-    title: { type: 'text', label: 'Title' },
+    icon: { type: 'text', label: 'Icon', width: 'half' },
+    title: { type: 'text', label: 'Title', width: 'half' },
     description: { type: 'textarea', label: 'Description' }
   }
 }
@@ -380,7 +490,6 @@ features: {
 seo: {
   type: 'group',
   label: 'SEO Settings',
-  collapsed: false,
   fields: {
     metaTitle: { type: 'text', label: 'Meta Title' },
     metaDescription: { type: 'textarea', label: 'Meta Description' }
@@ -392,31 +501,18 @@ seo: {
 
 ```ts
 // Color picker
-brandColor: {
-  type: 'color',
-  label: 'Brand Color',
-  format: 'hex',
-  presets: ['#3b82f6', '#10b981', '#f59e0b']
-}
+brandColor: { type: 'color', label: 'Brand Color' }
 
 // Auto-generated slug
-slug: {
-  type: 'slug',
-  label: 'URL Slug',
-  from: 'title', // Generate from title field
-  separator: '-'
-}
+slug: { type: 'slug', label: 'URL Slug', from: 'title' }
 
 // JSON editor
-metadata: {
-  type: 'json',
-  label: 'Metadata'
-}
+metadata: { type: 'json', label: 'Metadata' }
 ```
 
-### Field Options
+### Common Field Options
 
-All fields support these common options:
+All fields support these options:
 
 ```ts
 {
@@ -429,62 +525,38 @@ All fields support these common options:
   translatable: true,          // Enable i18n translations
   hidden: false,               // Hide from admin
   readonly: false,             // Read-only field
-  width: 'half',               // Field width in form layout
-  conditions: [{               // Conditional visibility
-    field: 'type',
-    operator: 'equals',
-    value: 'premium'
-  }]
+  width: 'half'                // 'full' | 'half' | 'third' | 'quarter'
 }
 ```
 
 ### Field Width Options
 
-Control how much horizontal space a field occupies in the form:
+| Width | Columns | Description |
+|-------|---------|-------------|
+| `'full'` | 12/12 | Full width (default) |
+| `'half'` | 6/12 | Half width — 2 fields per row |
+| `'third'` | 4/12 | One third — 3 fields per row |
+| `'quarter'` | 3/12 | One quarter — 4 fields per row |
 
-| Width | Description | Grid Columns |
-|-------|-------------|--------------|
-| `'full'` | Full width (default) | 12/12 |
-| `'half'` | Half width | 6/12 |
-| `'third'` | One third width | 4/12 |
-| `'quarter'` | One quarter width | 3/12 |
-
-Example layout with mixed widths:
-
+Example:
 ```ts
 fields: {
-  // These two fields appear side by side
   firstName: { type: 'text', label: 'First Name', width: 'half' },
   lastName: { type: 'text', label: 'Last Name', width: 'half' },
-
-  // Full width field
-  email: { type: 'email', label: 'Email', width: 'full' },
-
-  // Three fields in a row
-  city: { type: 'text', label: 'City', width: 'third' },
-  state: { type: 'text', label: 'State', width: 'third' },
-  zip: { type: 'text', label: 'ZIP', width: 'third' },
-
-  // Four fields in a row
-  q1: { type: 'number', label: 'Q1', width: 'quarter' },
-  q2: { type: 'number', label: 'Q2', width: 'quarter' },
-  q3: { type: 'number', label: 'Q3', width: 'quarter' },
-  q4: { type: 'number', label: 'Q4', width: 'quarter' }
+  email: { type: 'email', label: 'Email' }  // full width
 }
 ```
 
-> **Note:** On mobile devices, all fields automatically become full width for better usability.
+---
 
-## Multilingual Support (i18n)
+## 🌐 Internationalization (i18n)
 
 ### Configuration
-
-Enable multiple languages in your `cms.config.ts`:
 
 ```ts
 export default defineCmsConfig({
   locales: ['en', 'es', 'fr'],  // Available languages
-  defaultLocale: 'en',          // Default/fallback language
+  defaultLocale: 'en',
 
   collections: {
     posts: {
@@ -497,7 +569,7 @@ export default defineCmsConfig({
         slug: {
           type: 'slug',
           from: 'title'
-          // Not translatable - same slug for all languages
+          // Not translatable — same slug for all languages
         }
       }
     }
@@ -505,40 +577,27 @@ export default defineCmsConfig({
 })
 ```
 
-### Translatable Field Types
-
-The following field types support translations by default:
-- `text`
-- `textarea`
-- `richtext`
-- `markdown`
-- `code`
-
-You can disable translation for any field by setting `translatable: false`.
-
 ### Admin Panel UX
 
-When multiple locales are configured, the admin panel displays:
+When multiple locales are configured:
 
-1. **Language Panel** - A prominent panel at the top of forms showing:
-   - Language icon and "Language" label
-   - Active language badge (e.g., "EN")
-   - Language switcher buttons
-   - Hint explaining which fields are translatable
+1. **Language Switcher** — Appears at the top of forms
+2. **Translation Badges** — Translatable fields show an indicator icon
+3. **Visual Feedback** — Easy to see which language you're editing
 
-2. **Translatable Field Indicators** - Fields that support translation show a small translation icon badge in the top-right corner
-
-### Fetching Translated Content
+### Fetching Translations
 
 ```ts
-// Fetch with specific locale
+// Via composable
 const { data } = useCmsSingleton('homepage', { locale: 'es' })
 
-// Or use the public API
+// Via API
 const posts = await $fetch('/api/cms/public/collections/posts?locale=es')
 ```
 
-## Composables
+---
+
+## 🔌 Composables
 
 ### useCmsCollection
 
@@ -550,7 +609,6 @@ const {
   items,
   pending,
   total,
-  page,
   refresh,
   fetchById,
   create,
@@ -558,7 +616,6 @@ const {
   remove
 } = useCmsCollection('posts', {
   limit: 10,
-  offset: 0,
   orderBy: { publishedAt: 'desc' },
   locale: 'en'
 })
@@ -566,40 +623,22 @@ const {
 // Fetch single item
 const post = await fetchById('post-id')
 
-// Create new item
-await create({
-  title: 'New Post',
-  content: 'Content here...'
-}, {
-  es: { title: 'Nuevo Post' }
-})
+// Create
+await create({ title: 'New Post', content: '...' })
 
-// Update item
-await update('post-id', { title: 'Updated Title' })
+// Update
+await update('post-id', { title: 'Updated' })
 
-// Delete item
+// Delete
 await remove('post-id')
 </script>
 
 <template>
   <div v-if="pending">Loading...</div>
-  <div v-else>
-    <article v-for="post in items" :key="post.id">
-      <h2>{{ post.title }}</h2>
-    </article>
-  </div>
+  <article v-for="post in items" :key="post.id">
+    <h2>{{ post.title }}</h2>
+  </article>
 </template>
-```
-
-### useCmsCollectionItem
-
-Fetch a single collection item:
-
-```vue
-<script setup lang="ts">
-const route = useRoute()
-const { data: post, pending, error } = useCmsCollectionItem('posts', route.params.id)
-</script>
 ```
 
 ### useCmsSingleton
@@ -608,25 +647,11 @@ Fetch and update singleton data:
 
 ```vue
 <script setup lang="ts">
-const {
-  data,
-  pending,
-  refresh,
-  update,
-  getTranslation
-} = useCmsSingleton('homepage', {
+const { data, pending, update } = useCmsSingleton('homepage', {
   locale: 'en'
 })
 
-// Get translated value
-const heroTitle = getTranslation('heroTitle', 'es')
-
-// Update singleton
-await update({
-  heroTitle: 'New Hero Title'
-}, {
-  es: { heroTitle: 'Nuevo Titulo' }
-})
+await update({ heroTitle: 'New Title' })
 </script>
 ```
 
@@ -639,140 +664,138 @@ Manage media library:
 const {
   items,
   upload,
-  uploadMultiple,
   remove,
   uploading,
-  uploadProgress,
-  getUrl,
-  isImage,
-  formatSize
-} = useCmsMedia({
-  type: 'image',
-  limit: 20
-})
+  getUrl
+} = useCmsMedia({ type: 'image' })
 
-// Upload file
-const file = event.target.files[0]
-const media = await upload(file, 'Alt text for image')
-
-// Delete media
-await remove('media-id')
-
-// Get URL
-const url = getUrl(media)
+const handleUpload = async (file: File) => {
+  const media = await upload(file, 'Alt text')
+  console.log('Uploaded:', getUrl(media))
+}
 </script>
 ```
 
-## API Endpoints
+---
 
-The module exposes two sets of API endpoints:
+## 🔗 API Endpoints
 
-### Admin API (Authentication Required)
+### Public API (No Auth Required)
 
-These endpoints require admin authentication:
+Perfect for frontend consumption:
 
-#### Authentication
-- `POST /api/cms/auth/login` - Admin login
-- `POST /api/cms/auth/logout` - Admin logout
-- `GET /api/cms/auth/me` - Get current user
-
-#### Collections
-- `GET /api/cms/collections` - List all collections
-- `GET /api/cms/collections/:name` - List collection items
-- `POST /api/cms/collections/:name` - Create item
-- `GET /api/cms/collections/:name/:id` - Get item
-- `PUT /api/cms/collections/:name/:id` - Update item
-- `DELETE /api/cms/collections/:name/:id` - Delete item
-
-#### Singletons
-- `GET /api/cms/singletons` - List all singletons
-- `GET /api/cms/singletons/:name` - Get singleton
-- `PUT /api/cms/singletons/:name` - Update singleton
-
-#### Media
-- `GET /api/cms/media` - List media items
-- `POST /api/cms/media/upload` - Upload file
-- `GET /api/cms/media/file/:filename` - Get media file
-- `DELETE /api/cms/media/:id` - Delete media
-
-#### Schema
-- `GET /api/cms/schema` - Get CMS schema (collections, singletons, fields)
-
-### Public API (No Authentication Required)
-
-These endpoints are designed for frontend consumption and don't require authentication:
-
-#### Collections
 ```
 GET /api/cms/public/collections/:name
+GET /api/cms/public/singletons/:name
 ```
 
-Query parameters:
+**Query Parameters:**
+
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `page` | number | 1 | Page number |
 | `limit` | number | 20 | Items per page (max 100) |
-| `locale` | string | - | Language code for translations |
-| `sort` | string | `-createdAt` | Sort field (prefix with `-` for descending) |
-| `search` | string | - | Search in title field |
-| `status` | string | `published` | Filter by status (`published`, `draft`, `all`) |
+| `locale` | string | - | Language code |
+| `sort` | string | `-createdAt` | Sort field (prefix `-` for desc) |
+| `status` | string | `published` | `published`, `draft`, or `all` |
 
-Example:
+**Example:**
 ```ts
-// Fetch published posts in Spanish, sorted by date
-const { items, total, totalPages } = await $fetch('/api/cms/public/collections/posts', {
-  query: {
-    locale: 'es',
-    sort: '-publishedAt',
-    limit: 10,
-    page: 1
-  }
+const { items, total } = await $fetch('/api/cms/public/collections/posts', {
+  query: { locale: 'es', sort: '-publishedAt', limit: 10 }
 })
 ```
 
-#### Singletons
-```
-GET /api/cms/public/singletons/:name
-```
+### Admin API (Auth Required)
 
-Query parameters:
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `locale` | string | - | Language code for translations |
+<details>
+<summary><strong>View all admin endpoints</strong></summary>
 
-Example:
-```ts
-// Fetch homepage content in French
-const { data } = await $fetch('/api/cms/public/singletons/homepage', {
-  query: { locale: 'fr' }
-})
-```
+**Authentication:**
+- `POST /api/cms/auth/login`
+- `POST /api/cms/auth/logout`
+- `GET /api/cms/auth/me`
 
-## Environment Variables
+**Collections:**
+- `GET /api/cms/collections`
+- `GET /api/cms/collections/:name`
+- `POST /api/cms/collections/:name`
+- `GET /api/cms/collections/:name/:id`
+- `PUT /api/cms/collections/:name/:id`
+- `DELETE /api/cms/collections/:name/:id`
+
+**Singletons:**
+- `GET /api/cms/singletons`
+- `GET /api/cms/singletons/:name`
+- `PUT /api/cms/singletons/:name`
+
+**Media:**
+- `GET /api/cms/media`
+- `POST /api/cms/media/upload`
+- `GET /api/cms/media/file/:filename`
+- `DELETE /api/cms/media/:id`
+
+**Users & Roles:**
+- `GET /api/cms/users`
+- `POST /api/cms/users`
+- `GET /api/cms/users/:id`
+- `PUT /api/cms/users/:id`
+- `DELETE /api/cms/users/:id`
+- `GET /api/cms/roles`
+- `POST /api/cms/roles`
+- `PUT /api/cms/roles/:id`
+- `DELETE /api/cms/roles/:id`
+
+</details>
+
+---
+
+## 🔐 Security
+
+### Role-Based Access Control
+
+The CMS includes a full RBAC system:
+
+- **Admin** — Full access to all features
+- **Editor** — Can manage content, no user management
+- **Custom Roles** — Define granular permissions
+
+### Security Features
+
+- JWT-based authentication
+- Rate limiting on API endpoints
+- Input validation and sanitization
+- Secure password hashing (bcrypt)
+- CSRF protection
+- XSS prevention
+
+### Environment Variables
 
 ```env
-# JWT secret for admin authentication
-CMS_JWT_SECRET=your-secure-secret-here
+# Required for production
+CMS_JWT_SECRET=your-very-secure-secret-at-least-32-characters
 
-# PostgreSQL connection (if using PostgreSQL)
+# PostgreSQL (if used)
 DATABASE_URL=postgresql://user:password@localhost:5432/mydb
 ```
 
-## Collection Options
+---
+
+## 📦 Collection Options
 
 ```ts
 collections: {
   posts: {
-    label: 'Post',
-    labelPlural: 'Posts',
-    icon: 'DocumentTextIcon',     // Heroicons name
+    label: 'Post',                  // Singular label
+    labelPlural: 'Posts',           // Plural label
+    icon: 'heroicons:document-text', // Heroicon name
     description: 'Blog posts',
-    titleField: 'title',          // Field to show in lists
-    slugField: 'slug',            // Field for URL slugs
-    timestamps: true,             // Add created_at, updated_at
-    softDelete: false,            // Enable soft delete
-    publishable: true,            // Enable draft/published status
-    sortable: false,              // Enable manual sorting
+    titleField: 'title',            // Field to show in lists
+    slugField: 'slug',              // Field for URL slugs
+    timestamps: true,               // Add created_at, updated_at
+    softDelete: false,              // Enable soft delete
+    publishable: true,              // Enable draft/published
+    sortable: false,                // Enable manual sorting
     defaultSort: {
       field: 'createdAt',
       direction: 'desc'
@@ -782,15 +805,23 @@ collections: {
 }
 ```
 
-## TypeScript
+---
 
-The module provides full TypeScript support:
+## 🛠 TypeScript Support
+
+Full TypeScript support with type inference:
 
 ```ts
-import type { CmsModuleOptions, CmsConfig, CollectionConfig, FieldDefinition } from '@neskeep/nuxt-cms'
+import type {
+  CmsModuleOptions,
+  CmsConfig,
+  CollectionConfig,
+  FieldDefinition,
+  BrandingConfig
+} from '@neskeep/nuxt-cms'
 
-// Infer types from your config
-type Post = {
+// Type your content
+interface Post {
   id: string
   title: string
   content: string
@@ -800,80 +831,56 @@ type Post = {
 const { items } = useCmsCollection<Post>('posts')
 ```
 
-## Uninstallation
+---
 
-To completely remove the CMS module from your project:
+## 🗑 Uninstallation
 
-### Option A: Automatic Cleanup (Recommended)
-
-Run the uninstall script:
+### Automatic Cleanup
 
 ```bash
-# pnpm
-pnpm exec nuxt-cms-uninstall
-
-# npm
 npx nuxt-cms-uninstall
-
-# yarn
-yarn nuxt-cms-uninstall
 ```
 
-This will:
-- Remove `@neskeep/nuxt-cms` from your `nuxt.config.ts` modules
-- Remove the `cms:` configuration block from `nuxt.config.ts`
-- Optionally delete `cms.config.ts`
-- Optionally delete the `.cms` folder (database + uploads)
+This removes:
+- Module from `nuxt.config.ts`
+- `cms.config.ts` file
+- `.cms` folder (optional)
 
-Then remove the package:
+Then uninstall the package:
 
 ```bash
-pnpm remove @neskeep/nuxt-cms
+npm remove @neskeep/nuxt-cms
 ```
 
-### Option B: Manual Cleanup
+### Manual Cleanup
 
-1. Remove the module from `nuxt.config.ts`:
-   - Delete `'@neskeep/nuxt-cms'` from the `modules` array
-   - Delete the entire `cms: { ... }` configuration block
+1. Remove `'@neskeep/nuxt-cms'` from `modules` in `nuxt.config.ts`
+2. Remove the `cms: { ... }` configuration block
+3. Delete `cms.config.ts`
+4. Delete `.cms` folder
+5. Run `rm -rf .nuxt && npm run dev`
 
-2. Delete the configuration file:
-   ```bash
-   rm cms.config.ts
-   ```
+---
 
-3. Delete the CMS data folder (optional):
-   ```bash
-   rm -rf .cms
-   ```
+## 🧩 Compatibility
 
-4. Remove the package:
-   ```bash
-   pnpm remove @neskeep/nuxt-cms
-   ```
+| Requirement | Version |
+|-------------|---------|
+| Nuxt | 3.16+ or 4.x |
+| Node.js | 18+ |
+| TypeScript | 5.0+ (optional) |
 
-5. Clean and restart:
-   ```bash
-   rm -rf .nuxt && pnpm dev
-   ```
+Works with Tailwind CSS v3 and v4 — admin styles are fully isolated.
 
-## Compatibility
+---
 
-This module is compatible with:
-- **Nuxt 3.16+** and **Nuxt 4.x**
-- **Tailwind CSS v3** and **v4** (styles are isolated to prevent conflicts)
-
-### Tailwind CSS v4 Note
-
-The CMS admin panel uses scoped CSS with `!important` declarations to ensure styles are properly isolated from your host application's Tailwind configuration. This prevents the `--color-*: initial` reset in Tailwind v4 from affecting CMS components.
-
-## Development
+## 📖 Development
 
 ```bash
 # Install dependencies
 pnpm install
 
-# Development with playground
+# Run playground
 pnpm dev
 
 # Build module
@@ -881,15 +888,16 @@ pnpm build
 
 # Run tests
 pnpm test
-
-# Typecheck
-pnpm typecheck
 ```
 
-## License
+---
 
-MIT License
+## 📄 License
 
-## Contributing
+[MIT License](LICENSE) © [Neskeep](https://neskeep.com)
 
-Contributions are welcome! Please read the contributing guidelines first.
+---
+
+<p align="center">
+  Made with ❤️ by <a href="https://neskeep.com">Neskeep</a>
+</p>
