@@ -110,10 +110,15 @@ const submit = async () => {
       body.roleId = form.value.roleId
     }
 
-    await $fetch(`/api/cms/users/${userId}`, {
+    const updatedUser = await $fetch(`/api/cms/users/${userId}`, {
       method: 'PUT',
       body
     })
+
+    // Update global user state if editing own profile
+    if (isOwnProfile.value && updatedUser && typeof updatedUser === 'object') {
+      user.value = updatedUser as any
+    }
 
     navigateTo(`${config.public.cms.adminPath}/users`)
   } catch (err: unknown) {

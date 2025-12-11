@@ -147,7 +147,28 @@ export default defineEventHandler(async (event) => {
     .set(updateData)
     .where(eq(usersTable.id, id))
 
+  // Get updated user with role
+  const updatedUsers = await db
+    .select({
+      id: usersTable.id,
+      username: usersTable.username,
+      email: usersTable.email,
+      avatar: usersTable.avatar,
+      roleId: usersTable.roleId,
+      createdAt: usersTable.createdAt,
+      updatedAt: usersTable.updatedAt,
+      role: rolesTable.name,
+      roleName: rolesTable.displayName
+    })
+    .from(usersTable)
+    .leftJoin(rolesTable, eq(usersTable.roleId, rolesTable.id))
+    .where(eq(usersTable.id, id))
+    .limit(1)
+
+  const updatedUser = updatedUsers[0]
+
   return {
-    success: true
+    success: true,
+    ...updatedUser
   }
 })
