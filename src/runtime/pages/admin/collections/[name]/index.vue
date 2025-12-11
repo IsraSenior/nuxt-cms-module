@@ -2,6 +2,7 @@
 import { ref, computed, watch } from 'vue'
 import { definePageMeta, useRoute, useRuntimeConfig, useFetch, navigateTo } from '#imports'
 import { useCmsCollection } from '../../../../composables/useCmsCollection'
+import { useCmsI18n } from '../../../../composables/useCmsI18n'
 
 definePageMeta({
   layout: false,
@@ -10,6 +11,7 @@ definePageMeta({
 
 const route = useRoute()
 const config = useRuntimeConfig()
+const { t } = useCmsI18n()
 const collectionName = route.params.name as string
 
 // Sorting state
@@ -77,13 +79,13 @@ const columns = computed(() => {
   }
 
   // Always add status column
-  cols.push({ key: 'status', label: 'Status', sortable: true, width: '100px' })
+  cols.push({ key: 'status', label: t('users.status'), sortable: true, width: '100px' })
 
   // Always add updated date column
   cols.push({ key: 'updatedAt', label: 'Updated', sortable: true, width: '140px' })
 
   // Always add created date column
-  cols.push({ key: 'createdAt', label: 'Created', sortable: true, width: '140px' })
+  cols.push({ key: 'createdAt', label: t('users.createdAt'), sortable: true, width: '140px' })
 
   return cols
 })
@@ -195,7 +197,7 @@ function formatDateTime(dateStr: string | null | undefined): string {
               :to="`${config.public.cms.adminPath}/collections`"
               class="breadcrumb__link"
             >
-              Collections
+              {{ t('collections.title') }}
             </NuxtLink>
             <span class="breadcrumb__separator">›</span>
             <span class="breadcrumb__current">{{ collectionConfig.labelPlural || collectionConfig.label }}</span>
@@ -231,7 +233,7 @@ function formatDateTime(dateStr: string | null | undefined): string {
             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
           </svg>
         </div>
-        <h3 class="empty-state__title">No items yet</h3>
+        <h3 class="empty-state__title">{{ t('collections.noItems') }}</h3>
         <p class="empty-state__text">
           Create your first {{ collectionConfig.label?.toLowerCase() }}
         </p>
@@ -242,7 +244,7 @@ function formatDateTime(dateStr: string | null | undefined): string {
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="cms-btn__icon">
             <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
           </svg>
-          Create {{ collectionConfig.label }}
+          {{ t('common.create') }} {{ collectionConfig.label }}
         </NuxtLink>
       </div>
 

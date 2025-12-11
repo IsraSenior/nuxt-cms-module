@@ -11,6 +11,7 @@ export const usersSqlite = sqliteTable('cms_users', {
   email: text('email'),
   name: text('name'),
   avatar: text('avatar'),
+  locale: text('locale', { length: 5 }).default('en'),
   // Legacy role field for backwards compatibility during migration
   role: text('role', { enum: ['admin', 'editor'] }).default('editor'),
   // New role system - references cms_roles.id
@@ -31,6 +32,7 @@ export const usersPostgres = pgTable('cms_users', {
   email: varchar('email', { length: 255 }),
   name: varchar('name', { length: 255 }),
   avatar: varchar('avatar', { length: 500 }),
+  locale: varchar('locale', { length: 5 }).default('en'),
   // Legacy role field for backwards compatibility during migration
   role: varchar('role', { length: 20 }).default('editor'),
   // New role system - references cms_roles.id

@@ -109,19 +109,26 @@ export function useCmsI18n() {
   }
 
   /**
-   * Initialize locale from localStorage or browser
+   * Initialize locale from user preference, localStorage, or browser
    */
-  function init() {
+  function init(userLocale?: string | null) {
     if (typeof window === 'undefined') return
 
-    // Try to get from localStorage first
+    // Priority 1: User preference (from database)
+    if (userLocale && translations[userLocale as CmsLocale]) {
+      currentLocale.value = userLocale as CmsLocale
+      localStorage.setItem('cms-locale', userLocale)
+      return
+    }
+
+    // Priority 2: localStorage
     const stored = localStorage.getItem('cms-locale') as CmsLocale | null
     if (stored && translations[stored]) {
       currentLocale.value = stored
       return
     }
 
-    // Try to get from browser language
+    // Priority 3: Browser language
     const browserLang = navigator.language.split('-')[0] as CmsLocale
     if (translations[browserLang]) {
       currentLocale.value = browserLang
@@ -132,7 +139,7 @@ export function useCmsI18n() {
     currentLocale.value = 'en'
   }
 
-  // Auto-initialize on mount
+  // Auto-initialize on mount (without user locale)
   if (typeof window !== 'undefined' && !localStorage.getItem('cms-locale')) {
     init()
   }

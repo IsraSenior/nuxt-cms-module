@@ -7,8 +7,8 @@ definePageMeta({
 
 const config = useRuntimeConfig()
 
-// Redirect to branding settings by default
-navigateTo(`${config.public.cms.adminPath}/settings/branding`)
+// Redirect to general settings by default
+navigateTo(`${config.public.cms.adminPath}/settings/general`)
 </script>
 
 <template>

@@ -19,6 +19,8 @@ export interface CmsUser {
   name: string | null
   /** Avatar URL */
   avatar: string | null
+  /** User preferred locale (en, es, etc.) */
+  locale: string | null
   /** User role (legacy - for backwards compatibility) */
   role: UserRole | null
   /** Role ID (new RBAC system) */
@@ -42,6 +44,8 @@ export interface SafeCmsUser {
   email: string | null
   name: string | null
   avatar: string | null
+  /** User preferred locale */
+  locale: string | null
   /** Legacy role field */
   role: UserRole | null
   /** New role ID (RBAC) */
@@ -98,6 +102,7 @@ export function toSafeUser(user: CmsUser, roleName?: string): SafeCmsUser {
     email: user.email,
     name: user.name,
     avatar: user.avatar,
+    locale: user.locale,
     role: user.role,
     roleId: user.roleId,
     roleName,

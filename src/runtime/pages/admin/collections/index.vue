@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { definePageMeta, useRuntimeConfig, useFetch } from '#imports'
+import { useCmsI18n } from '../../../composables/useCmsI18n'
 
 definePageMeta({
   layout: false,
@@ -8,6 +9,7 @@ definePageMeta({
 })
 
 const config = useRuntimeConfig()
+const { t } = useCmsI18n()
 
 // Icon mapping for collections
 const iconMap: Record<string, string> = {
@@ -40,7 +42,7 @@ const collections = computed(() => {
       <!-- Header -->
       <div class="page__header">
         <div>
-          <h1 class="page__title">Collections</h1>
+          <h1 class="page__title">{{ t('collections.title') }}</h1>
           <p class="page__subtitle">Manage your content collections</p>
         </div>
       </div>
@@ -71,7 +73,7 @@ const collections = computed(() => {
         <div class="empty-state__icon">
           <UIcon name="i-heroicons-inbox" class="w-8 h-8" />
         </div>
-        <h3 class="empty-state__title">No collections configured</h3>
+        <h3 class="empty-state__title">{{ t('collections.noCollections') }}</h3>
         <p class="empty-state__text">
           Define your collections in <code class="empty-state__code">cms.config.ts</code>
         </p>

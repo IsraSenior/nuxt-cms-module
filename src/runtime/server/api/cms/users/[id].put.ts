@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const body = await readBody(event)
-  const { username, email, password, roleId, avatar } = body
+  const { username, email, password, roleId, avatar, locale } = body
 
   const db = useCmsDatabase()
   const isPostgres = getDatabaseType() === 'postgresql'
@@ -112,6 +112,10 @@ export default defineEventHandler(async (event) => {
     updateData.avatar = avatar || null
   }
 
+  if (locale !== undefined) {
+    updateData.locale = locale || null
+  }
+
   if (roleId && roleId !== existingUser.roleId) {
     // Validate role exists
     const role = await db
@@ -154,6 +158,7 @@ export default defineEventHandler(async (event) => {
       username: usersTable.username,
       email: usersTable.email,
       avatar: usersTable.avatar,
+      locale: usersTable.locale,
       roleId: usersTable.roleId,
       createdAt: usersTable.createdAt,
       updatedAt: usersTable.updatedAt,

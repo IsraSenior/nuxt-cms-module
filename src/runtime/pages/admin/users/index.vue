@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { definePageMeta, useRuntimeConfig, useFetch, navigateTo } from '#imports'
 import { useCmsAdmin } from '../../../composables/useCmsAdmin'
+import { useCmsI18n } from '../../../composables/useCmsI18n'
 
 definePageMeta({
   layout: false,
@@ -10,6 +11,7 @@ definePageMeta({
 
 const { user: currentUser } = useCmsAdmin()
 const config = useRuntimeConfig()
+const { t } = useCmsI18n()
 const searchQuery = ref('')
 const page = ref(1)
 const perPage = ref(20)
@@ -40,7 +42,7 @@ const meta = computed(() => usersData.value?.meta || { total: 0, page: 1, perPag
 
 // Delete user
 const deleteUser = async (userId: string, username: string) => {
-  if (!confirm(`Are you sure you want to delete user "${username}"? This action cannot be undone.`)) {
+  if (!confirm(t('users.confirmDelete'))) {
     return
   }
 
@@ -69,14 +71,14 @@ const formatDate = (date: string) => {
       <!-- Header -->
       <div class="users-page__header">
         <div>
-          <h1 class="users-page__title">Users</h1>
+          <h1 class="users-page__title">{{ t('users.title') }}</h1>
           <p class="users-page__subtitle">Manage user accounts and permissions</p>
         </div>
         <NuxtLink :to="`${config.public.cms.adminPath}/users/new`" class="btn btn--primary">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="btn__icon">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
           </svg>
-          Add User
+          {{ t('users.createUser') }}
         </NuxtLink>
       </div>
 
@@ -89,7 +91,7 @@ const formatDate = (date: string) => {
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Search users..."
+            :placeholder="t('users.searchPlaceholder')"
             class="search-input__field"
           />
         </div>
@@ -100,22 +102,22 @@ const formatDate = (date: string) => {
         <table class="users-table">
           <thead>
             <tr>
-              <th>User</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Created</th>
-              <th class="users-table__actions-header">Actions</th>
+              <th>{{ t('users.username') }}</th>
+              <th>{{ t('users.email') }}</th>
+              <th>{{ t('users.role') }}</th>
+              <th>{{ t('users.createdAt') }}</th>
+              <th class="users-table__actions-header">{{ t('common.actions') }}</th>
             </tr>
           </thead>
           <tbody>
             <tr v-if="pending">
               <td colspan="5" class="users-table__loading">
-                Loading users...
+                {{ t('common.loading') }}
               </td>
             </tr>
             <tr v-else-if="users.length === 0">
               <td colspan="5" class="users-table__empty">
-                No users found
+                {{ t('users.noUsers') }}
               </td>
             </tr>
             <tr v-for="user in users" :key="user.id" class="users-table__row">
@@ -140,7 +142,7 @@ const formatDate = (date: string) => {
                   <NuxtLink
                     :to="`${config.public.cms.adminPath}/users/${user.id}`"
                     class="action-btn action-btn--edit"
-                    title="Edit user"
+                    :title="t('common.edit')"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
@@ -149,7 +151,7 @@ const formatDate = (date: string) => {
                   <button
                     v-if="user.id !== currentUser?.id"
                     class="action-btn action-btn--delete"
-                    title="Delete user"
+                    :title="t('common.delete')"
                     @click="deleteUser(user.id, user.username)"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -170,17 +172,17 @@ const formatDate = (date: string) => {
           :disabled="page <= 1"
           @click="page--"
         >
-          Previous
+          {{ t('pagination.previous') }}
         </button>
         <span class="pagination-info">
-          Page {{ meta.page }} of {{ meta.totalPages }}
+          {{ t('pagination.page') }} {{ meta.page }} {{ t('pagination.of') }} {{ meta.totalPages }}
         </span>
         <button
           class="pagination-btn"
           :disabled="page >= meta.totalPages"
           @click="page++"
         >
-          Next
+          {{ t('pagination.next') }}
         </button>
       </div>
     </div>

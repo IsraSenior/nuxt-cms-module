@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { definePageMeta, useRuntimeConfig, useFetch } from '#imports'
 import { useCmsAdmin } from '../../composables/useCmsAdmin'
+import { useCmsI18n } from '../../composables/useCmsI18n'
 
 definePageMeta({
   layout: false,
@@ -10,6 +11,7 @@ definePageMeta({
 
 const { user } = useCmsAdmin()
 const config = useRuntimeConfig()
+const { t } = useCmsI18n()
 
 // Fetch schema to get actual counts
 const { data: schema } = await useFetch('/api/cms/schema')
@@ -37,8 +39,8 @@ const mediaCount = computed(() => {
       <!-- Header -->
       <div class="dashboard__header">
         <div>
-          <h1 class="dashboard__title">Dashboard</h1>
-          <p class="dashboard__subtitle">Welcome back, {{ user?.username }}</p>
+          <h1 class="dashboard__title">{{ t('dashboard.title') }}</h1>
+          <p class="dashboard__subtitle">{{ t('dashboard.welcome', { name: user?.username || '' }) }}</p>
         </div>
       </div>
 
@@ -53,7 +55,7 @@ const mediaCount = computed(() => {
           </div>
           <div class="stat-card__content">
             <span class="stat-card__value">{{ collectionsCount }}</span>
-            <span class="stat-card__label">Collections</span>
+            <span class="stat-card__label">{{ t('dashboard.stats.collections') }}</span>
           </div>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="stat-card__arrow">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
@@ -69,7 +71,7 @@ const mediaCount = computed(() => {
           </div>
           <div class="stat-card__content">
             <span class="stat-card__value">{{ singletonsCount }}</span>
-            <span class="stat-card__label">Singletons</span>
+            <span class="stat-card__label">{{ t('dashboard.stats.singletons') }}</span>
           </div>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="stat-card__arrow">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
@@ -85,7 +87,7 @@ const mediaCount = computed(() => {
           </div>
           <div class="stat-card__content">
             <span class="stat-card__value">{{ mediaCount }}</span>
-            <span class="stat-card__label">Media Files</span>
+            <span class="stat-card__label">{{ t('dashboard.stats.media') }}</span>
           </div>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="stat-card__arrow">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
@@ -95,7 +97,7 @@ const mediaCount = computed(() => {
 
       <!-- Quick Actions -->
       <div class="dashboard__section">
-        <h2 class="dashboard__section-title">Quick Actions</h2>
+        <h2 class="dashboard__section-title">{{ t('dashboard.quickActions') }}</h2>
         <div class="dashboard__actions">
           <!-- Collections -->
           <NuxtLink :to="`${config.public.cms.adminPath}/collections`" class="action-card">
@@ -105,7 +107,7 @@ const mediaCount = computed(() => {
               </svg>
             </div>
             <div class="action-card__content">
-              <span class="action-card__title">Collections</span>
+              <span class="action-card__title">{{ t('nav.collections') }}</span>
               <span class="action-card__description">Manage your content collections</span>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="action-card__arrow">
@@ -121,7 +123,7 @@ const mediaCount = computed(() => {
               </svg>
             </div>
             <div class="action-card__content">
-              <span class="action-card__title">Singletons</span>
+              <span class="action-card__title">{{ t('nav.singletons') }}</span>
               <span class="action-card__description">Edit single-instance content</span>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="action-card__arrow">
@@ -137,7 +139,7 @@ const mediaCount = computed(() => {
               </svg>
             </div>
             <div class="action-card__content">
-              <span class="action-card__title">Media Library</span>
+              <span class="action-card__title">{{ t('media.title') }}</span>
               <span class="action-card__description">Upload and manage files</span>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="action-card__arrow">

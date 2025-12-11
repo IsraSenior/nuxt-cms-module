@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useRuntimeConfig, useRoute } from '#imports'
 import { useCmsAdmin } from '../../composables/useCmsAdmin'
 import { useCmsI18n } from '../../composables/useCmsI18n'
@@ -8,7 +8,14 @@ import type { BrandingConfig } from '../../types'
 const { user, logout } = useCmsAdmin()
 const config = useRuntimeConfig()
 const route = useRoute()
-const { t, locale, setLocale, availableLocales } = useCmsI18n()
+const { t, init } = useCmsI18n()
+
+// Initialize locale from user preference
+onMounted(() => {
+  if (user.value?.locale) {
+    init(user.value.locale)
+  }
+})
 
 // Get branding config
 const branding = computed<BrandingConfig>(() => config.public.cms.branding || {})
@@ -145,21 +152,6 @@ watch(() => route.path, () => {
             <span class="cms-user__name">@{{ user.username }}</span>
             <span class="cms-user__role">{{ user.roleName || user.role || 'User' }}</span>
           </div>
-        </div>
-
-        <!-- Language Selector -->
-        <div class="cms-user__locale">
-          <button
-            v-for="lang in availableLocales"
-            :key="lang.code"
-            class="cms-user__locale-btn"
-            :class="{ 'cms-user__locale-btn--active': locale === lang.code }"
-            @click="setLocale(lang.code)"
-            :title="lang.name"
-          >
-            <span class="cms-user__locale-flag">{{ lang.flag }}</span>
-            <span class="cms-user__locale-code">{{ lang.code.toUpperCase() }}</span>
-          </button>
         </div>
 
         <button class="cms-user__logout" @click="logout" :title="t('common.logout')">
@@ -460,59 +452,6 @@ watch(() => route.path, () => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-/* Language Selector */
-.cms-user__locale {
-  display: flex;
-  gap: 6px;
-  padding: 0 12px;
-}
-
-.cms-user__locale-btn {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 8px 6px;
-  border-radius: 8px;
-  background-color: transparent !important;
-  border: 1px solid #e5e7eb !important;
-  color: #6b7280 !important;
-  font-size: 11px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.cms-user__locale-btn:hover {
-  background-color: #f3f4f6 !important;
-  border-color: #d1d5db !important;
-  color: #374151 !important;
-}
-
-.cms-user__locale-btn--active {
-  background-color: var(--cms-primary, #2563eb) !important;
-  border-color: var(--cms-primary, #2563eb) !important;
-  color: #ffffff !important;
-}
-
-.cms-user__locale-btn--active:hover {
-  background-color: var(--cms-primary-hover, #1d4ed8) !important;
-  border-color: var(--cms-primary-hover, #1d4ed8) !important;
-  color: #ffffff !important;
-}
-
-.cms-user__locale-flag {
-  font-size: 16px;
-  line-height: 1;
-}
-
-.cms-user__locale-code {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
 }
 
 .cms-user__logout {
