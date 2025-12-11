@@ -504,9 +504,9 @@ slug: { type: 'slug', label: 'URL Slug', from: 'title' }
 icon: {
   type: 'icon',
   label: 'Icon',
-  variants: ['outline', 'solid', 'mini', 'micro'],  // Available variants
-  defaultVariant: 'outline',                         // Default variant
-  clearable: true                                    // Allow clearing
+  variants: ['outline', 'solid'],  // Available variants
+  defaultVariant: 'outline',       // Default variant
+  clearable: true                  // Allow clearing
 }
 
 // JSON editor
