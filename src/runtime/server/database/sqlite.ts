@@ -188,6 +188,13 @@ function createTables(sqlite: Database.Database) {
     // Column already exists, ignore
   }
 
+  // Add locale column if it doesn't exist (migration for existing databases)
+  try {
+    sqlite.exec(`ALTER TABLE cms_users ADD COLUMN locale TEXT DEFAULT 'en'`)
+  } catch {
+    // Column already exists, ignore
+  }
+
   // Create index on role_id (must be after column exists)
   sqlite.exec(`
     CREATE INDEX IF NOT EXISTS idx_users_role_id ON cms_users(role_id)

@@ -177,6 +177,13 @@ async function createTables(client: ReturnType<typeof postgres>) {
   } catch {
     // Column might already exist
   }
+
+  // Add locale column if it doesn't exist (migration for existing databases)
+  try {
+    await client`ALTER TABLE cms_users ADD COLUMN IF NOT EXISTS locale VARCHAR(5) DEFAULT 'en'`
+  } catch {
+    // Column might already exist
+  }
 }
 
 export type PostgresDatabase = ReturnType<typeof drizzle>
