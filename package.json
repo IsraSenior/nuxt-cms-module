@@ -1,6 +1,6 @@
 {
   "name": "@neskeep/nuxt-cms",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A developer-friendly CMS module for Nuxt 4 with multi-database support and i18n",
   "license": "MIT",
   "type": "module",
