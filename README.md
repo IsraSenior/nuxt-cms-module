@@ -50,7 +50,7 @@ npm install @neskeep/nuxt-cms
 ### Content Management
 - **Collections** — Create dynamic content types (posts, products, etc.)
 - **Singletons** — Manage unique pages (homepage, settings)
-- **20+ Field Types** — Text, richtext, images, relations, repeaters, and more
+- **27 Field Types** — Text, richtext, images, icons, relations, repeaters, and more
 - **Media Library** — Upload and manage images, videos, and files
 
 </td>
@@ -305,7 +305,7 @@ export default defineNuxtConfig({
         name: 'My CMS',                    // Text shown in sidebar
         logo: '/images/logo.svg',          // Custom logo image URL
 
-        // Theme color
+        // Theme color (applies to navigation, buttons, links, etc.)
         primaryColor: '#2563eb',           // Primary color (hex)
 
         // "Powered by" footer
@@ -318,12 +318,7 @@ export default defineNuxtConfig({
         login: {
           backgroundImage: '/images/login-bg.jpg',  // Left panel background
           title: 'Welcome to My CMS',
-          description: 'Manage your content with ease.',
-          features: [
-            { icon: 'heroicons:document-text', text: 'Easy content management' },
-            { icon: 'heroicons:photo', text: 'Media library' },
-            { icon: 'heroicons:globe-alt', text: 'Multi-language support' }
-          ]
+          description: 'Manage your content with ease.'
         }
       }
     }
@@ -337,13 +332,12 @@ export default defineNuxtConfig({
 |--------|------|---------|-------------|
 | `name` | `string` | `'CMS'` | CMS name shown in logo area |
 | `logo` | `string` | - | Custom logo image URL |
-| `primaryColor` | `string` | `'#2563eb'` | Primary theme color (hex) |
+| `primaryColor` | `string` | `'#2563eb'` | Primary theme color (hex) - applies to nav, buttons, links, hovers |
 | `poweredBy.name` | `string` | `'Neskeep'` | "Powered by" text |
 | `poweredBy.url` | `string` | `'https://neskeep.com'` | Optional link URL |
 | `login.backgroundImage` | `string` | - | Login left panel background |
 | `login.title` | `string` | `'Content Management System'` | Login page heading |
 | `login.description` | `string` | - | Login page description |
-| `login.features` | `array` | - | Feature list with icons |
 
 ---
 
@@ -505,6 +499,15 @@ brandColor: { type: 'color', label: 'Brand Color' }
 
 // Auto-generated slug
 slug: { type: 'slug', label: 'URL Slug', from: 'title' }
+
+// Icon picker (Heroicons)
+icon: {
+  type: 'icon',
+  label: 'Icon',
+  variants: ['outline', 'solid', 'mini', 'micro'],  // Available variants
+  defaultVariant: 'outline',                         // Default variant
+  clearable: true                                    // Allow clearing
+}
 
 // JSON editor
 metadata: { type: 'json', label: 'Metadata' }
