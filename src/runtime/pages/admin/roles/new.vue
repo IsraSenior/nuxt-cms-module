@@ -491,6 +491,7 @@ const submit = async () => {
 
 .btn--primary:hover:not(:disabled) {
   background: var(--cms-primary-hover, #1d4ed8);
+  color: white;
 }
 
 .btn--primary:disabled {

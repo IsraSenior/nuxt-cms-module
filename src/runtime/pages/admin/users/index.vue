@@ -430,6 +430,7 @@ const formatDate = (date: string) => {
 
 .btn--primary:hover {
   background: var(--cms-primary-hover, #1d4ed8);
+  color: white;
 }
 
 .btn__icon {

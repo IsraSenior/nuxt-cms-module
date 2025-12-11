@@ -628,6 +628,7 @@ async function copyConfig() {
 
 .btn--primary:hover:not(:disabled) {
   background: var(--cms-primary-hover, #1d4ed8);
+  color: white;
 }
 
 .btn--primary:disabled {
@@ -749,6 +750,7 @@ async function copyConfig() {
 
 .preview-btn--primary:hover {
   background: var(--cms-primary-hover, #1d4ed8);
+  color: white;
 }
 
 .preview-btn--secondary {
