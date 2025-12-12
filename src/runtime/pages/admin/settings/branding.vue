@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { definePageMeta, useRuntimeConfig } from '#imports'
+import { useBranding } from '../../composables/useBranding'
 
 definePageMeta({
   layout: false,
@@ -8,6 +9,7 @@ definePageMeta({
 })
 
 const config = useRuntimeConfig()
+const { updateBranding, refreshBranding } = useBranding()
 
 // Upload states
 const uploadingLogo = ref(false)
@@ -121,6 +123,13 @@ const loading = ref(false)
 const error = ref('')
 const success = ref(false)
 
+// Watch for form changes and update branding in real-time
+watch(() => form.value.primaryColor, (newColor) => {
+  if (newColor) {
+    updateBranding({ primaryColor: newColor })
+  }
+})
+
 // Preview colors
 const primaryColorStyle = computed(() => {
   const color = form.value.primaryColor || '#2563eb'
@@ -185,12 +194,15 @@ const submit = async () => {
       throw new Error('Failed to save branding settings')
     }
 
+    // Refresh branding from the database
+    await refreshBranding()
+
     success.value = true
 
-    // Reload the page after a short delay to apply new branding
+    // Hide success message after 3 seconds
     setTimeout(() => {
-      window.location.reload()
-    }, 1500)
+      success.value = false
+    }, 3000)
   } catch (err: unknown) {
     const e = err as { message?: string }
     error.value = e.message || 'Failed to save settings'
@@ -226,7 +238,7 @@ const submit = async () => {
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
               </svg>
-              Branding settings saved successfully! Reloading...
+              Branding settings saved successfully!
             </div>
 
             <!-- Error Message -->

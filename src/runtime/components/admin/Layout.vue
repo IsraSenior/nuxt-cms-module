@@ -3,12 +3,13 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useRuntimeConfig, useRoute } from '#imports'
 import { useCmsAdmin } from '../../composables/useCmsAdmin'
 import { useCmsI18n } from '../../composables/useCmsI18n'
-import type { BrandingConfig } from '../../types'
+import { useBranding } from '../../composables/useBranding'
 
 const { user, logout } = useCmsAdmin()
 const config = useRuntimeConfig()
 const route = useRoute()
 const { t, init } = useCmsI18n()
+const { branding } = useBranding()
 
 // Initialize locale from user preference
 onMounted(() => {
@@ -16,9 +17,6 @@ onMounted(() => {
     init(user.value.locale)
   }
 })
-
-// Get branding config
-const branding = computed<BrandingConfig>(() => config.public.cms.branding || {})
 
 // CSS variables for primary color
 const primaryColorStyle = computed(() => {
