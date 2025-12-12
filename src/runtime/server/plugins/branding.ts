@@ -1,6 +1,6 @@
 import { defineNuxtPlugin, useRuntimeConfig } from '#imports'
 import { eq } from 'drizzle-orm'
-import { useCmsDatabase, settingsSQLite, settingsPostgres, getDatabaseType } from '../server/database/client'
+import { useCmsDatabase, settingsSQLite, settingsPostgres, getDatabaseType } from '../database/client'
 
 export default defineNuxtPlugin(async () => {
   const config = useRuntimeConfig()
