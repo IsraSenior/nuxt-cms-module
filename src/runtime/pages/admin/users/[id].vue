@@ -2,6 +2,7 @@
 import { ref, computed, watch } from 'vue'
 import { definePageMeta, useRuntimeConfig, useFetch, useRoute, navigateTo } from '#imports'
 import { useCmsAdmin } from '../../../composables/useCmsAdmin'
+import { useCmsI18n } from '../../../composables/useCmsI18n'
 import CmsFieldSelect from '../../../components/fields/Select.vue'
 import CmsFieldImage from '../../../components/fields/Image.vue'
 
@@ -13,6 +14,7 @@ definePageMeta({
 const config = useRuntimeConfig()
 const route = useRoute()
 const { user: currentUser } = useCmsAdmin()
+const { setLocale } = useCmsI18n()
 const userId = route.params.id as string
 
 // Form state
@@ -149,24 +151,19 @@ const submit = async () => {
 
     success.value = true
 
-    // If editing own profile and locale changed, reload page to apply new language
+    // If editing own profile and locale changed, apply new language immediately
     const localeChanged = body.locale && body.locale !== userData.value?.data.locale
-    if (isOwnProfile.value) {
+    if (isOwnProfile.value && localeChanged) {
       // Update global user state
-      if (updatedUser && typeof updatedUser === 'object') {
-        user.value = updatedUser as any
+      if (updatedUser && typeof updatedUser === 'object' && 'data' in updatedUser) {
+        currentUser.value = (updatedUser as any).data
       }
 
-      if (localeChanged) {
-        // Reload page to apply new language
-        setTimeout(() => {
-          window.location.href = config.public.cms.adminPath
-        }, 1500)
-        return
-      }
+      // Apply new locale immediately without reload
+      setLocale(body.locale as 'en' | 'es')
     }
 
-    // Normal redirect
+    // Redirect after showing success message
     setTimeout(() => {
       navigateTo(`${config.public.cms.adminPath}/users`)
     }, 1500)
