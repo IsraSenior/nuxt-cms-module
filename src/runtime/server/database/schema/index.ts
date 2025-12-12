@@ -29,12 +29,6 @@ export {
   type NewRoleSqlite
 } from './roles'
 
-export {
-  settingsSQLite,
-  type Setting,
-  type NewSetting
-} from './settings'
-
 // PostgreSQL schemas
 export {
   contentPostgres,
@@ -65,10 +59,6 @@ export {
   type RolePostgres,
   type NewRolePostgres
 } from './roles'
-
-export {
-  settingsPostgres
-} from './settings'
 
 // Role types and defaults
 export {
