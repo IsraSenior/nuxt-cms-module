@@ -9,6 +9,12 @@ definePageMeta({
 
 const config = useRuntimeConfig()
 
+// Upload states
+const uploadingLogo = ref(false)
+const uploadingFavicon = ref(false)
+const uploadingLoginBg = ref(false)
+const uploadError = ref('')
+
 // Form state
 const form = ref({
   name: '',
@@ -22,6 +28,76 @@ const form = ref({
   poweredByUrl: 'https://neskeep.com',
   hidePoweredBy: false
 })
+
+// Upload handler
+async function uploadImage(file: File): Promise<string> {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  const response = await fetch('/api/cms/media/upload', {
+    method: 'POST',
+    body: formData,
+    credentials: 'include'
+  })
+
+  if (!response.ok) {
+    throw new Error('Upload failed')
+  }
+
+  const data = await response.json()
+  return `/api/cms/media/file/${data.filename}`
+}
+
+async function handleLogoUpload(event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+
+  uploadingLogo.value = true
+  uploadError.value = ''
+  try {
+    form.value.logo = await uploadImage(file)
+  } catch (err) {
+    uploadError.value = 'Logo upload failed'
+    console.error(err)
+  } finally {
+    uploadingLogo.value = false
+  }
+}
+
+async function handleFaviconUpload(event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+
+  uploadingFavicon.value = true
+  uploadError.value = ''
+  try {
+    form.value.favicon = await uploadImage(file)
+  } catch (err) {
+    uploadError.value = 'Favicon upload failed'
+    console.error(err)
+  } finally {
+    uploadingFavicon.value = false
+  }
+}
+
+async function handleLoginBgUpload(event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+
+  uploadingLoginBg.value = true
+  uploadError.value = ''
+  try {
+    form.value.loginBackgroundImage = await uploadImage(file)
+  } catch (err) {
+    uploadError.value = 'Background image upload failed'
+    console.error(err)
+  } finally {
+    uploadingLoginBg.value = false
+  }
+}
 
 // Load current branding config
 const branding = computed(() => config.public.cms.branding || {})
@@ -169,8 +245,8 @@ async function copyConfig() {
             </div>
 
             <!-- Error Message -->
-            <div v-if="error" class="settings-form__error">
-              {{ error }}
+            <div v-if="error || uploadError" class="settings-form__error">
+              {{ error || uploadError }}
             </div>
 
             <h2 class="settings-section__title">General</h2>
@@ -188,16 +264,35 @@ async function copyConfig() {
               <p class="form-field__hint">Displayed in the sidebar and page titles</p>
             </div>
 
-            <!-- Logo URL -->
+            <!-- Logo -->
             <div class="form-field">
-              <label for="logo" class="form-field__label">Logo URL</label>
-              <input
-                id="logo"
-                v-model="form.logo"
-                type="url"
-                class="form-field__input"
-                placeholder="https://example.com/logo.svg"
-              />
+              <label for="logo" class="form-field__label">Logo</label>
+              <div class="image-upload">
+                <div v-if="form.logo" class="image-upload__preview">
+                  <img :src="form.logo" alt="Logo" class="image-upload__img" />
+                  <button type="button" class="image-upload__remove" @click="form.logo = ''">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <div v-else class="image-upload__placeholder">
+                  <input
+                    id="logo"
+                    type="file"
+                    accept="image/*"
+                    class="image-upload__input"
+                    @change="handleLogoUpload"
+                  />
+                  <label for="logo" class="image-upload__label">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                    </svg>
+                    <span v-if="uploadingLogo">Uploading...</span>
+                    <span v-else>Click to upload logo</span>
+                  </label>
+                </div>
+              </div>
               <p class="form-field__hint">Sidebar logo image (recommended: SVG, max height 40px)</p>
             </div>
 
@@ -223,14 +318,33 @@ async function copyConfig() {
 
             <!-- Favicon -->
             <div class="form-field">
-              <label for="favicon" class="form-field__label">Favicon URL</label>
-              <input
-                id="favicon"
-                v-model="form.favicon"
-                type="url"
-                class="form-field__input"
-                placeholder="https://example.com/favicon.ico"
-              />
+              <label for="favicon" class="form-field__label">Favicon</label>
+              <div class="image-upload image-upload--small">
+                <div v-if="form.favicon" class="image-upload__preview">
+                  <img :src="form.favicon" alt="Favicon" class="image-upload__img" />
+                  <button type="button" class="image-upload__remove" @click="form.favicon = ''">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <div v-else class="image-upload__placeholder">
+                  <input
+                    id="favicon"
+                    type="file"
+                    accept="image/x-icon,image/png,image/ico"
+                    class="image-upload__input"
+                    @change="handleFaviconUpload"
+                  />
+                  <label for="favicon" class="image-upload__label">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                    </svg>
+                    <span v-if="uploadingFavicon">Uploading...</span>
+                    <span v-else>Click to upload</span>
+                  </label>
+                </div>
+              </div>
               <p class="form-field__hint">Browser tab icon (ICO or PNG, 16x16 or 32x32)</p>
             </div>
 
@@ -265,14 +379,33 @@ async function copyConfig() {
             <!-- Login Background Image -->
             <div class="form-field">
               <label for="loginBackgroundImage" class="form-field__label">Login Background Image</label>
-              <input
-                id="loginBackgroundImage"
-                v-model="form.loginBackgroundImage"
-                type="url"
-                class="form-field__input"
-                placeholder="https://example.com/background.jpg"
-              />
-              <p class="form-field__hint">Background image for login branding panel</p>
+              <div class="image-upload">
+                <div v-if="form.loginBackgroundImage" class="image-upload__preview">
+                  <img :src="form.loginBackgroundImage" alt="Login Background" class="image-upload__img" />
+                  <button type="button" class="image-upload__remove" @click="form.loginBackgroundImage = ''">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <div v-else class="image-upload__placeholder">
+                  <input
+                    id="loginBackgroundImage"
+                    type="file"
+                    accept="image/*"
+                    class="image-upload__input"
+                    @change="handleLoginBgUpload"
+                  />
+                  <label for="loginBackgroundImage" class="image-upload__label">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                    </svg>
+                    <span v-if="uploadingLoginBg">Uploading...</span>
+                    <span v-else>Click to upload background</span>
+                  </label>
+                </div>
+              </div>
+              <p class="form-field__hint">Background image for login page</p>
             </div>
 
             <h2 class="settings-section__title">Footer</h2>
@@ -590,6 +723,109 @@ async function copyConfig() {
   font-size: 14px;
   color: #374151;
   user-select: none;
+}
+
+/* Image Upload */
+.image-upload {
+  position: relative;
+}
+
+.image-upload__preview {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f9fafb;
+}
+
+.image-upload__img {
+  width: 100%;
+  height: 150px;
+  object-fit: contain;
+  display: block;
+  padding: 12px;
+}
+
+.image-upload--small .image-upload__img {
+  height: 80px;
+}
+
+.image-upload__remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(220, 38, 38, 0.9);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.image-upload__remove:hover {
+  background: rgba(185, 28, 28, 1);
+}
+
+.image-upload__remove svg {
+  width: 18px;
+  height: 18px;
+}
+
+.image-upload__placeholder {
+  position: relative;
+}
+
+.image-upload__input {
+  position: absolute;
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.image-upload__label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 300px;
+  height: 150px;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  background: #f9fafb;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #6b7280;
+}
+
+.image-upload--small .image-upload__label {
+  height: 80px;
+}
+
+.image-upload__label:hover {
+  border-color: var(--cms-primary, #2563eb);
+  background: #f3f4f6;
+  color: var(--cms-primary, #2563eb);
+}
+
+.image-upload__label svg {
+  width: 32px;
+  height: 32px;
+}
+
+.image-upload__label span {
+  font-size: 14px;
+  font-weight: 500;
 }
 
 /* Actions */
