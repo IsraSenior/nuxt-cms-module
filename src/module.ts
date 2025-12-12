@@ -233,6 +233,10 @@ const cmsModule: NuxtModule<CmsModuleOptions> = defineNuxtModule({
         from: resolver.resolve('./runtime/composables/useCmsAdmin')
       },
       {
+        name: 'useBranding',
+        from: resolver.resolve('./runtime/composables/useBranding')
+      },
+      {
         name: 'defineCmsConfig',
         from: resolver.resolve('./runtime/types/config')
       }
