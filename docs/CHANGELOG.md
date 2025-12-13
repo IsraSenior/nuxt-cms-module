@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.2] - 2025-12-13
+
+### Added
+- Buy Me a Coffee support badge in README
+- Support section in README with donation information
+- Footer link in admin sidebar for supporter attribution
+- Monetization support via Buy Me a Coffee platform
+
+### Changed
+- Enhanced README with community support section
+- Updated branding documentation for poweredBy footer link
+
 ## [1.0.1] - 2025-12-12
 
 ### Fixed

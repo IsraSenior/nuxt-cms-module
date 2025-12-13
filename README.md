@@ -15,6 +15,7 @@
   <a href="https://github.com/neskeep/nuxt-cms-module/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@neskeep/nuxt-cms.svg?style=flat-square&color=6366f1" alt="license"></a>
   <a href="https://nuxt.com"><img src="https://img.shields.io/badge/Nuxt-3.16+-00DC82.svg?style=flat-square&logo=nuxt.js" alt="Nuxt"></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-Ready-3178C6.svg?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript"></a>
+  <a href="https://www.buymeacoffee.com/neskeep"><img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Support-FFDD00?style=flat-square&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee"></a>
 </p>
 
 <p align="center">
@@ -977,6 +978,30 @@ pnpm build
 # Run tests
 pnpm test
 ```
+
+---
+
+## 💖 Support
+
+If this project has been helpful to you, consider supporting its development:
+
+<p align="center">
+  <a href="https://www.buymeacoffee.com/neskeep" target="_blank">
+    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="60" width="217">
+  </a>
+</p>
+
+**Your support helps:**
+- 🚀 Maintain and improve the CMS
+- ✨ Add new features based on community feedback
+- 📚 Provide better documentation and support
+- 🌟 Keep the project 100% open source
+
+**Currently working on:**
+- Login page redesign and UX improvements
+- Additional language support (French, Portuguese, German)
+- Advanced content features (versioning, scheduled publishing)
+- Comprehensive documentation and video tutorials
 
 ---
 

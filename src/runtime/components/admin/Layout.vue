@@ -175,6 +175,22 @@ watch(() => route.path, () => {
           </div>
         </Transition>
       </div>
+
+      <!-- Footer -->
+      <div class="cms-footer">
+        <a
+          v-if="branding.poweredBy?.url"
+          :href="branding.poweredBy.url"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="cms-footer__link"
+        >
+          {{ branding.poweredBy?.name || 'Neskeep' }}
+        </a>
+        <span v-else class="cms-footer__text">
+          {{ branding.poweredBy?.name || 'Neskeep' }}
+        </span>
+      </div>
     </aside>
 
     <!-- Main area -->
@@ -557,6 +573,26 @@ watch(() => route.path, () => {
 .dropdown-leave-to {
   opacity: 0;
   transform: translateY(10px);
+}
+
+/* Footer */
+.cms-footer {
+  padding: 12px 20px;
+  text-align: center;
+  border-top: 1px solid #e5e7eb !important;
+  flex-shrink: 0;
+}
+
+.cms-footer__link,
+.cms-footer__text {
+  font-size: 12px;
+  color: #9ca3af !important;
+  text-decoration: none !important;
+  transition: color 0.15s ease;
+}
+
+.cms-footer__link:hover {
+  color: var(--cms-primary, #2563eb) !important;
 }
 
 /* ============================================
