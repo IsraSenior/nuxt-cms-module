@@ -70,7 +70,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Organized all documentation into /docs folder
-- CLAUDE.md added to .gitignore (local context only)
 - Improved backward compatibility for avatar field data
 
 ## [0.5.0] - 2025-12-11
