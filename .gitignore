@@ -30,6 +30,7 @@ playground/.cms
 playground/node_modules
 
 .playwright-mcp
+.claude
 
 # Personal notes (local only)
 CLAUDE.md
